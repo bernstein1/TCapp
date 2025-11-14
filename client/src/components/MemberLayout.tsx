@@ -49,9 +49,9 @@ export function MemberLayout({ children }: MemberLayoutProps) {
             
             return (
               <Link key={item.name} href={item.href}>
-                <a
+                <div
                   className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-md transition-colors hover-elevate",
+                    "flex items-center gap-3 px-4 py-3 rounded-md transition-colors hover-elevate cursor-pointer",
                     isActive 
                       ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium" 
                       : "text-sidebar-foreground/70 hover:text-sidebar-foreground"
@@ -60,7 +60,7 @@ export function MemberLayout({ children }: MemberLayoutProps) {
                 >
                   <Icon className="h-5 w-5" />
                   {item.name}
-                </a>
+                </div>
               </Link>
             );
           })}
@@ -109,9 +109,9 @@ export function MemberLayout({ children }: MemberLayoutProps) {
               
               return (
                 <Link key={item.name} href={item.href}>
-                  <a
+                  <div
                     className={cn(
-                      "flex flex-col items-center gap-1 px-3 py-2 rounded-md transition-colors min-w-[60px]",
+                      "flex flex-col items-center gap-1 px-3 py-2 rounded-md transition-colors min-w-[60px] cursor-pointer",
                       isActive 
                         ? "text-primary" 
                         : "text-muted-foreground"
@@ -120,7 +120,7 @@ export function MemberLayout({ children }: MemberLayoutProps) {
                   >
                     <Icon className="h-5 w-5" />
                     <span className="text-xs font-medium">{item.name}</span>
-                  </a>
+                  </div>
                 </Link>
               );
             })}

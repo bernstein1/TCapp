@@ -1,19 +1,24 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { TaskBar, type Task } from "@/components/TaskBar";
 import { CaseCard, type Case } from "@/components/CaseCard";
 import { NotificationItem, type Notification } from "@/components/NotificationItem";
 import { AppointmentCard, type Appointment } from "@/components/AppointmentCard";
+import { NewCaseModal } from "@/components/NewCaseModal";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { 
-  MessageCircle, 
-  CreditCard, 
-  Calendar, 
+import {
+  MessageCircle,
+  CreditCard,
+  Calendar,
   FileText,
   ChevronRight
 } from "lucide-react";
 
 export default function Dashboard() {
+  const [, setLocation] = useLocation();
+  const [showNewCaseModal, setShowNewCaseModal] = useState(false);
+
   //todo: remove mock functionality
   const [tasks, setTasks] = useState<Task[]>([
     {
@@ -106,37 +111,48 @@ export default function Dashboard() {
             <TaskBar
               tasks={tasks}
               onTaskToggle={(taskId) => {
-                setTasks(tasks.map(t => 
+                setTasks(tasks.map(t =>
                   t.id === taskId ? { ...t, completed: !t.completed } : t
                 ));
               }}
-              onTaskClick={(taskId) => console.log('Task clicked:', taskId)}
+              onTaskClick={(taskId) => {
+                const task = tasks.find(t => t.id === taskId);
+                if (task?.title.includes("dependent")) setLocation("/settings");
+                if (task?.title.includes("insurance card")) setLocation("/documents");
+                if (task?.title.includes("phone")) setLocation("/settings");
+              }}
             />
 
             {/* Active Cases */}
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-display font-bold text-xl">Active Cases</h2>
-                <Button variant="ghost" size="sm" data-testid="button-view-all-cases">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  data-testid="button-view-all-cases"
+                  onClick={() => setLocation("/cases")}
+                >
                   View all
                   <ChevronRight className="ml-1 h-4 w-4" />
                 </Button>
               </div>
-              
+
               <div className="space-y-3">
                 {mockCases.map((case_) => (
                   <CaseCard
                     key={case_.id}
                     case_={case_}
-                    onClick={() => console.log('Open case:', case_.id)}
+                    onClick={() => setLocation(`/cases/${case_.id}`)}
                   />
                 ))}
               </div>
 
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="w-full mt-4"
                 data-testid="button-new-case"
+                onClick={() => setShowNewCaseModal(true)}
               >
                 <MessageCircle className="mr-2 h-4 w-4" />
                 Start New Conversation
@@ -147,19 +163,27 @@ export default function Dashboard() {
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-display font-bold text-xl">Notifications</h2>
-                <Button variant="ghost" size="sm" data-testid="button-view-all-notifications">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  data-testid="button-view-all-notifications"
+                  onClick={() => setLocation("/settings")}
+                >
                   View all
                   <ChevronRight className="ml-1 h-4 w-4" />
                 </Button>
               </div>
-              
+
               <Card>
                 <div className="divide-y">
                   {mockNotifications.map((notification) => (
                     <NotificationItem
                       key={notification.id}
                       notification={notification}
-                      onClick={() => console.log('Open notification:', notification.id)}
+                      onClick={() => {
+                        if (notification.type === "case_update") setLocation("/cases");
+                        if (notification.type === "document") setLocation("/documents");
+                      }}
                     />
                   ))}
                 </div>
@@ -173,9 +197,9 @@ export default function Dashboard() {
               <h2 className="font-display font-bold text-xl mb-4">Upcoming Appointment</h2>
               <AppointmentCard
                 appointment={mockAppointment}
-                onReschedule={() => console.log('Reschedule')}
-                onCancel={() => console.log('Cancel')}
-                onJoin={() => console.log('Join')}
+                onReschedule={() => setLocation("/schedule")}
+                onCancel={() => setLocation("/schedule")}
+                onJoin={() => setLocation("/schedule")}
               />
             </div>
 
@@ -183,34 +207,38 @@ export default function Dashboard() {
             <div>
               <h2 className="font-display font-bold text-xl mb-4">Quick Actions</h2>
               <div className="grid grid-cols-2 gap-3">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="h-24 flex flex-col gap-2"
                   data-testid="button-quick-wallet"
+                  onClick={() => setLocation("/wallet")}
                 >
                   <CreditCard className="h-6 w-6" />
                   <span className="text-sm">View ID Card</span>
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="h-24 flex flex-col gap-2"
                   data-testid="button-quick-schedule"
+                  onClick={() => setLocation("/schedule")}
                 >
                   <Calendar className="h-6 w-6" />
                   <span className="text-sm">Schedule</span>
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="h-24 flex flex-col gap-2"
                   data-testid="button-quick-documents"
+                  onClick={() => setLocation("/documents")}
                 >
                   <FileText className="h-6 w-6" />
                   <span className="text-sm">Documents</span>
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="h-24 flex flex-col gap-2"
                   data-testid="button-quick-message"
+                  onClick={() => setShowNewCaseModal(true)}
                 >
                   <MessageCircle className="h-6 w-6" />
                   <span className="text-sm">Message Us</span>
@@ -220,6 +248,8 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      <NewCaseModal open={showNewCaseModal} onClose={() => setShowNewCaseModal(false)} />
     </div>
   );
 }

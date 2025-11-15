@@ -27,9 +27,9 @@ export default function DocumentCardExample() {
         <DocumentCard
           key={doc.id}
           document={doc}
-          onView={() => console.log('View document:', doc.id)}
-          onDownload={() => console.log('Download document:', doc.id)}
-          onShare={() => console.log('Share document:', doc.id)}
+          onView={() => {}}
+          onDownload={() => {}}
+          onShare={() => {}}
         />
       ))}
     </div>

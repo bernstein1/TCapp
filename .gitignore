@@ -1,6 +1,38 @@
+# Dependencies
 node_modules
+
+# Build outputs
 dist
-.DS_Store
 server/public
+
+# Environment variables
+.env
+.env.local
+.env*.local
+
+# Deployment
+.vercel
+
+# Database
+migrations/
+
+# Local state
+.local/
+
+# Replit
+.replit
+.config/
+
+# Development assets
+design_guidelines.md
+generated-icon.png
+attached_assets/
+
+# OS
+.DS_Store
+
+# Vite
 vite.config.ts.*
+
+# Archives
 *.tar.gz

@@ -1,0 +1,71 @@
+
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts
+
+⚠️  DATABASE_URL not set - running without database (API calls will fail)
+⚠️  Warning: Missing recommended environment variables:
+  - DATABASE_URL
+
+Application will run without database. API calls may fail.
+See .env.example for required configuration.
+8:51:11 AM [express] serving on localhost:5000
+
+
+Source path: /Users/alexrbernstein/Downloads/UnifiedTouchCare/client/src/index.css
+Setting up new context...
+Finding changed files: 4.144ms
+
+
+Source path: /Users/alexrbernstein/Downloads/UnifiedTouchCare/client/src/index.css
+Finding changed files: 1.988ms
+(node:4001) Warning: Label 'JIT TOTAL' already exists for console.time()
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4001) Warning: Label 'Reading changed files' already exists for console.time()
+Reading changed files: 397.682ms
+Sorting candidates: 4.963ms
+Generate rules: 91.248ms
+Build stylesheet: 2.595ms
+Potential classes:  8708
+Active contexts:  1
+JIT TOTAL: 649.922ms
+
+
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+Sorting candidates: 4.551ms
+Generate rules: 9.061ms
+Build stylesheet: 0.004ms
+Potential classes:  8708
+Active contexts:  1
+
+
+(node:4001) Warning: No such label 'Reading changed files' for console.timeEnd()
+(node:4001) Warning: No such label 'JIT TOTAL' for console.timeEnd()
+8:59:25 AM [vite] hmr update /src/components/WalletCard.tsx, /src/index.css?v=CHqWy4M48X4CRGNSaEE6j
+
+
+Source path: /Users/alexrbernstein/Downloads/UnifiedTouchCare/client/src/index.css
+Finding changed files: 2.823ms
+Reading changed files: 4.205ms
+Sorting candidates: 0.085ms
+Generate rules: 3.829ms
+Build stylesheet: 2.046ms
+Potential classes:  212
+Active contexts:  1
+JIT TOTAL: 23.974ms
+
+
+9:06:58 AM [vite] hmr update /src/pages/WalletPage.tsx, /src/index.css?v=CHqWy4M48X4CRGNSaEE6j
+
+
+Source path: /Users/alexrbernstein/Downloads/UnifiedTouchCare/client/src/index.css
+Finding changed files: 2.644ms
+Reading changed files: 5.85ms
+Sorting candidates: 0.131ms
+Generate rules: 0.236ms
+Build stylesheet: 0.001ms
+Potential classes:  354
+Active contexts:  1
+JIT TOTAL: 17.976ms
+
+

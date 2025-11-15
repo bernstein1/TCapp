@@ -34,14 +34,12 @@ export default function TaskBarExample() {
   ]);
 
   const handleTaskToggle = (taskId: string) => {
-    setTasks(tasks.map(t => 
+    setTasks(tasks.map(t =>
       t.id === taskId ? { ...t, completed: !t.completed } : t
     ));
-    console.log('Task toggled:', taskId);
   };
 
-  const handleTaskClick = (taskId: string) => {
-    console.log('Task clicked:', taskId);
+  const handleTaskClick = () => {
   };
 
   return (

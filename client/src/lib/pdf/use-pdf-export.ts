@@ -1,0 +1,176 @@
+import { useState } from 'react';
+import { generateAndDownloadPDF, getFilenameSuffix, PDFReportData, formatCurrency } from './pdf-utils';
+import { HSAReport } from './templates/hsa-report';
+import { FSAReport } from './templates/fsa-report';
+import { CommuterReport } from './templates/commuter-report';
+import { LifeInsuranceReport } from './templates/life-insurance-report';
+import {
+  HSAInputs,
+  HSAResults,
+  FSAInputs,
+  FSAResults,
+  CommuterInputs,
+  CommuterResults,
+  LifeInsuranceInputs,
+  LifeInsuranceResults
+} from '@shared/schema';
+import { HSA_LIMITS } from '@/lib/calculations';
+
+type CalculatorInputs = HSAInputs | FSAInputs | CommuterInputs | LifeInsuranceInputs;
+type CalculatorResults = HSAResults | FSAResults | CommuterResults | LifeInsuranceResults;
+
+export const usePDFExport = () => {
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const exportHSAReport = async (inputs: HSAInputs, results: HSAResults) => {
+    setIsGenerating(true);
+    setError(null);
+    
+    try {
+      const coverageText = inputs.coverage === 'family' ? 'family' : 'individual';
+      const familyLimitText = `The ${formatCurrency(HSA_LIMITS.family)} family limit applies to family HDHP / CDHP coverage and increases to ${formatCurrency(HSA_LIMITS.family + HSA_LIMITS.catchUp)} with the age 55+ catch-up.`;
+      const familyQualifier =
+        inputs.coverage === 'family'
+          ? ` ${familyLimitText}`
+          : ` ${familyLimitText} If you remain on individual coverage, you cannot contribute that household amount.`;
+
+      const data: PDFReportData = {
+        type: 'hsa',
+        title: 'HSA Strategy Analysis',
+        generatedAt: new Date(),
+        inputs,
+        results,
+        additionalData: {
+          narrative: {
+            compatibility: `Qualified ${coverageText} high-deductible or consumer driven health plan (HDHP / CDHP) coverage opens ${formatCurrency(results.annualContributionLimit)} of health savings account (HSA) room, including ${formatCurrency(results.catchUpContribution ?? 0)} in catch-up space once you turn 55.${familyQualifier}`,
+            employerSupport: `Employer contributions of ${formatCurrency(results.employerContribution)} combine with your paycheck deposits to build the ${formatCurrency(inputs.targetReserve)} safety cushion.`,
+            premiumOffsets: `Switching plans frees ${formatCurrency(results.annualPremiumSavings)} in yearly premiums that can move straight into the HSA.`,
+            cashflow: `After premium savings, employer help, and tax savings, you keep ${formatCurrency(results.netCashflowAdvantage)} more than the payroll contributions going out.`,
+          }
+        }
+      };
+      
+      const filename = `HSA_Report_${getFilenameSuffix()}.pdf`;
+      const reportElement = HSAReport({ data }) as React.ReactElement;
+      await generateAndDownloadPDF(reportElement, filename);
+    } catch (err) {
+      setError('Failed to generate HSA report. Please try again.');
+      console.error('HSA PDF export error:', err);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const exportFSAReport = async (inputs: FSAInputs, results: FSAResults) => {
+    setIsGenerating(true);
+    setError(null);
+
+    try {
+      const data: PDFReportData = {
+        type: 'fsa',
+        title: 'FSA Election Analysis',
+        generatedAt: new Date(),
+        inputs,
+        results,
+        additionalData: {
+          narrative: {
+            electionSizing: `You chose to set aside ${formatCurrency(inputs.healthElection)}. That amount should cover about ${formatCurrency(results.expectedUtilization)} in medical costs you already expect, such as routine visits and prescriptions.`,
+            gracePeriod: `Your plan protects roughly ${formatCurrency(results.carryoverProtected)} through carryover rules and a ${inputs.gracePeriodMonths.toFixed(1)}-month grace period, giving extra time to spend leftovers.`,
+            forfeiture: `Keep an eye on the ${formatCurrency(results.forfeitureRisk)} that could be forfeited so you hold on to the ${formatCurrency(results.netBenefit)} net benefit after taxes.`
+          }
+        }
+      };
+
+      const filename = `FSA_Report_${getFilenameSuffix()}.pdf`;
+      const reportElement = FSAReport({ data }) as React.ReactElement;
+      await generateAndDownloadPDF(reportElement, filename);
+    } catch (err) {
+      setError('Failed to generate FSA report. Please try again.');
+      console.error('FSA PDF export error:', err);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const exportCommuterReport = async (inputs: CommuterInputs, results: CommuterResults) => {
+    setIsGenerating(true);
+    setError(null);
+    
+    try {
+      const data: PDFReportData = {
+        type: 'commuter',
+        title: 'Commuter Benefits Analysis',
+        generatedAt: new Date(),
+        inputs,
+        results
+      };
+      
+      const filename = `Commuter_Report_${getFilenameSuffix()}.pdf`;
+      const reportElement = CommuterReport({ data }) as React.ReactElement;
+      await generateAndDownloadPDF(reportElement, filename);
+    } catch (err) {
+      setError('Failed to generate Commuter report. Please try again.');
+      console.error('Commuter PDF export error:', err);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const exportLifeInsuranceReport = async (inputs: LifeInsuranceInputs, results: LifeInsuranceResults) => {
+    setIsGenerating(true);
+    setError(null);
+    
+    try {
+      const data: PDFReportData = {
+        type: 'life-insurance',
+        title: 'Life Insurance Needs Analysis',
+        generatedAt: new Date(),
+        inputs,
+        results
+      };
+      
+      const filename = `Life_Insurance_Report_${getFilenameSuffix()}.pdf`;
+      const reportElement = LifeInsuranceReport({ data }) as React.ReactElement;
+      await generateAndDownloadPDF(reportElement, filename);
+    } catch (err) {
+      setError('Failed to generate Life Insurance report. Please try again.');
+      console.error('Life Insurance PDF export error:', err);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const exportReport = async (
+    type: 'hsa' | 'fsa' | 'commuter' | 'life-insurance',
+    inputs: CalculatorInputs,
+    results: CalculatorResults
+  ) => {
+    switch (type) {
+      case 'hsa':
+        await exportHSAReport(inputs as HSAInputs, results as HSAResults);
+        break;
+      case 'fsa':
+        await exportFSAReport(inputs as FSAInputs, results as FSAResults);
+        break;
+      case 'commuter':
+        await exportCommuterReport(inputs as CommuterInputs, results as CommuterResults);
+        break;
+      case 'life-insurance':
+        await exportLifeInsuranceReport(inputs as LifeInsuranceInputs, results as LifeInsuranceResults);
+        break;
+      default:
+        setError('Unknown report type');
+    }
+  };
+
+  return {
+    isGenerating,
+    error,
+    exportHSAReport,
+    exportFSAReport,
+    exportCommuterReport,
+    exportLifeInsuranceReport,
+    exportReport
+  };
+};

@@ -95,8 +95,8 @@ export default function ServicesPage() {
             <ServiceCard
               key={service.id}
               service={service}
-              onCall={() => console.log('Call service:', service.id)}
-              onMessage={() => console.log('Message service:', service.id)}
+              onCall={() => {}}
+              onMessage={() => {}}
             />
           ))}
         </div>

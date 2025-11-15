@@ -38,41 +38,45 @@ export function WalletCard({ card, onShare, onDownload }: WalletCardProps) {
         {/* Front of card */}
         <Card
           className={cn(
-            "absolute inset-0 backface-hidden bg-gradient-to-br from-primary to-primary/80 text-primary-foreground p-6",
-            "shadow-xl"
+            "absolute inset-0 backface-hidden overflow-hidden p-6",
+            "bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800",
+            "shadow-[0_8px_32px_rgba(0,0,0,0.3)]",
+            "text-white",
+            "before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/20 before:to-transparent before:pointer-events-none",
+            "after:absolute after:inset-0 after:bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_50%)] after:pointer-events-none"
           )}
         >
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full relative z-10">
             <div className="flex items-start justify-between mb-6">
               <div>
-                <h3 className="font-display font-bold text-lg mb-1">TouchCare</h3>
-                <p className="text-xs opacity-90">{card.planName}</p>
+                <h3 className="font-display font-bold text-xl mb-1 text-white drop-shadow-sm">TouchCare</h3>
+                <p className="text-xs text-white/90">{card.planName}</p>
               </div>
-              <div className="text-xs opacity-75">
+              <div className="text-xs text-white/80">
                 <div>Effective</div>
-                <div className="font-semibold">{card.effectiveDate}</div>
+                <div className="font-semibold text-white">{card.effectiveDate}</div>
               </div>
             </div>
 
             <div className="flex-1">
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
-                  <div className="text-xs opacity-75 mb-1">Member Name</div>
-                  <div className="font-semibold">{card.memberName}</div>
+                  <div className="text-xs text-white/70 mb-1">Member Name</div>
+                  <div className="font-semibold text-white">{card.memberName}</div>
                 </div>
                 <div>
-                  <div className="text-xs opacity-75 mb-1">Member ID</div>
-                  <div className="font-semibold font-mono">{card.memberId}</div>
+                  <div className="text-xs text-white/70 mb-1">Member ID</div>
+                  <div className="font-semibold font-mono text-white">{card.memberId}</div>
                 </div>
               </div>
 
               <div>
-                <div className="text-xs opacity-75 mb-1">Group Number</div>
-                <div className="font-semibold font-mono">{card.groupNumber}</div>
+                <div className="text-xs text-white/70 mb-1">Group Number</div>
+                <div className="font-semibold font-mono text-white">{card.groupNumber}</div>
               </div>
             </div>
 
-            <div className="text-xs opacity-75 flex items-center gap-2">
+            <div className="text-xs text-white/70 flex items-center gap-2">
               <RotateCcw className="h-3 w-3" />
               <span>Tap to flip</span>
             </div>
@@ -82,39 +86,43 @@ export function WalletCard({ card, onShare, onDownload }: WalletCardProps) {
         {/* Back of card */}
         <Card
           className={cn(
-            "absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground p-6",
-            "shadow-xl"
+            "absolute inset-0 backface-hidden rotate-y-180 overflow-hidden p-6",
+            "bg-gradient-to-br from-blue-700 via-indigo-800 to-blue-900",
+            "shadow-[0_8px_32px_rgba(0,0,0,0.3)]",
+            "text-white",
+            "before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/15 before:to-transparent before:pointer-events-none",
+            "after:absolute after:inset-0 after:bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_50%)] after:pointer-events-none"
           )}
         >
-          <div className="flex flex-col h-full text-sm">
-            <h4 className="font-display font-bold text-base mb-4">Important Information</h4>
+          <div className="flex flex-col h-full text-sm relative z-10">
+            <h4 className="font-display font-bold text-lg mb-4 text-white drop-shadow-sm">Important Information</h4>
 
             <div className="space-y-3 flex-1">
               <div>
-                <div className="text-xs opacity-75 mb-1">Customer Service</div>
-                <div className="font-semibold">{card.customerServicePhone}</div>
+                <div className="text-xs text-white/70 mb-1">Customer Service</div>
+                <div className="font-semibold text-white">{card.customerServicePhone}</div>
               </div>
 
               {card.rxBin && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-xs opacity-75 mb-1">RX BIN</div>
-                    <div className="font-semibold">{card.rxBin}</div>
+                    <div className="text-xs text-white/70 mb-1">RX BIN</div>
+                    <div className="font-semibold text-white">{card.rxBin}</div>
                   </div>
                   <div>
-                    <div className="text-xs opacity-75 mb-1">RX PCN</div>
-                    <div className="font-semibold">{card.rxPcn}</div>
+                    <div className="text-xs text-white/70 mb-1">RX PCN</div>
+                    <div className="font-semibold text-white">{card.rxPcn}</div>
                   </div>
                 </div>
               )}
 
               <div>
-                <div className="text-xs opacity-75 mb-1">Submit Claims To</div>
-                <div className="text-xs leading-relaxed">{card.claimsAddress}</div>
+                <div className="text-xs text-white/70 mb-1">Submit Claims To</div>
+                <div className="text-xs leading-relaxed text-white/90">{card.claimsAddress}</div>
               </div>
             </div>
 
-            <div className="text-xs opacity-75 flex items-center gap-2">
+            <div className="text-xs text-white/70 flex items-center gap-2">
               <RotateCcw className="h-3 w-3" />
               <span>Tap to flip</span>
             </div>

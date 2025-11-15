@@ -7,10 +7,22 @@ import {
   Settings,
   Calendar,
   Briefcase,
+  BookOpen,
+  Calculator,
+  Menu,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./ThemeToggle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { useState } from "react";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -19,6 +31,8 @@ const navigation = [
   { name: "Wallet", href: "/wallet", icon: CreditCard },
   { name: "Schedule", href: "/schedule", icon: Calendar },
   { name: "Services", href: "/services", icon: Briefcase },
+  { name: "Calculators", href: "/calculators", icon: Calculator },
+  { name: "Resources", href: "/resources", icon: BookOpen },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
@@ -28,16 +42,23 @@ type MemberLayoutProps = {
 
 export function MemberLayout({ children }: MemberLayoutProps) {
   const [location] = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:border-r lg:bg-sidebar">
         <div className="flex items-center gap-3 p-6 border-b">
-          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-            <span className="font-display font-bold text-primary-foreground text-lg">T</span>
-          </div>
-          <h1 className="font-display font-bold text-xl">TouchCare</h1>
+          <img
+            src="/assets/logos/TC-logo-horizontal-blue.png"
+            alt="TouchCare"
+            className="h-8 w-auto dark:hidden"
+          />
+          <img
+            src="/assets/logos/TouchCare_HorizontalLogo-White-RGB (1).png"
+            alt="TouchCare"
+            className="h-8 w-auto hidden dark:block"
+          />
         </div>
 
         <nav className="flex-1 p-4 space-y-1">
@@ -84,11 +105,66 @@ export function MemberLayout({ children }: MemberLayoutProps) {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Mobile Header */}
         <header className="lg:hidden flex items-center justify-between p-4 border-b bg-background">
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-64 p-0">
+              <SheetHeader className="p-6 border-b">
+                <SheetTitle className="text-left">
+                  <img
+                    src="/assets/logos/TC-logo-horizontal-blue.png"
+                    alt="TouchCare"
+                    className="h-8 w-auto dark:hidden"
+                  />
+                  <img
+                    src="/assets/logos/TouchCare_HorizontalLogo-White-RGB (1).png"
+                    alt="TouchCare"
+                    className="h-8 w-auto hidden dark:block"
+                  />
+                </SheetTitle>
+              </SheetHeader>
+              <nav className="p-4 space-y-1">
+                {navigation.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = item.href === "/"
+                    ? location === "/"
+                    : location.startsWith(item.href);
+
+                  return (
+                    <Link key={item.name} href={item.href}>
+                      <div
+                        className={cn(
+                          "flex items-center gap-3 px-4 py-3 rounded-md transition-colors cursor-pointer",
+                          isActive
+                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                            : "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+                        )}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Icon className="h-5 w-5" />
+                        {item.name}
+                      </div>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </SheetContent>
+          </Sheet>
+
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="font-display font-bold text-primary-foreground text-lg">T</span>
-            </div>
-            <h1 className="font-display font-bold text-xl">TouchCare</h1>
+            <img
+              src="/assets/logos/TC-logo-horizontal-blue.png"
+              alt="TouchCare"
+              className="h-8 w-auto dark:hidden"
+            />
+            <img
+              src="/assets/logos/TouchCare_HorizontalLogo-White-RGB (1).png"
+              alt="TouchCare"
+              className="h-8 w-auto hidden dark:block"
+            />
           </div>
           <ThemeToggle />
         </header>

@@ -17,8 +17,8 @@ export default function WalletCardExample() {
     <div className="p-8 max-w-lg">
       <WalletCard
         card={card}
-        onShare={() => console.log('Share card')}
-        onDownload={() => console.log('Download card')}
+        onShare={() => {}}
+        onDownload={() => {}}
       />
     </div>
   );

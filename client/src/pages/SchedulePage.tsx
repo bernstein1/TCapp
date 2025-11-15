@@ -62,9 +62,9 @@ export default function SchedulePage() {
                 <AppointmentCard
                   key={appointment.id}
                   appointment={appointment}
-                  onReschedule={() => console.log('Reschedule:', appointment.id)}
-                  onCancel={() => console.log('Cancel:', appointment.id)}
-                  onJoin={() => console.log('Join:', appointment.id)}
+                  onReschedule={() => {}}
+                  onCancel={() => {}}
+                  onJoin={() => {}}
                 />
               ))}
             </div>

@@ -14,9 +14,9 @@ export default function CaseCardExample() {
 
   return (
     <div className="p-8 max-w-2xl">
-      <CaseCard 
-        case_={exampleCase} 
-        onClick={() => console.log('Case clicked:', exampleCase.id)}
+      <CaseCard
+        case_={exampleCase}
+        onClick={() => {}}
       />
     </div>
   );

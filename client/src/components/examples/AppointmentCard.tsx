@@ -15,9 +15,9 @@ export default function AppointmentCardExample() {
     <div className="p-8 max-w-md">
       <AppointmentCard
         appointment={appointment}
-        onReschedule={() => console.log('Reschedule clicked')}
-        onCancel={() => console.log('Cancel clicked')}
-        onJoin={() => console.log('Join clicked')}
+        onReschedule={() => {}}
+        onCancel={() => {}}
+        onJoin={() => {}}
       />
     </div>
   );

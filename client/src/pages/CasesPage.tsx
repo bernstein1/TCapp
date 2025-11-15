@@ -1,12 +1,16 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { CaseCard, type Case } from "@/components/CaseCard";
+import { NewCaseModal } from "@/components/NewCaseModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, MessageCircle, Filter } from "lucide-react";
 
 export default function CasesPage() {
+  const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
+  const [showNewCaseModal, setShowNewCaseModal] = useState(false);
 
   //todo: remove mock functionality
   const mockCases: Case[] = [
@@ -81,7 +85,10 @@ export default function CasesPage() {
             <Filter className="mr-2 h-4 w-4" />
             Filter
           </Button>
-          <Button data-testid="button-new-case">
+          <Button
+            data-testid="button-new-case"
+            onClick={() => setShowNewCaseModal(true)}
+          >
             <MessageCircle className="mr-2 h-4 w-4" />
             New Case
           </Button>
@@ -102,7 +109,7 @@ export default function CasesPage() {
               <CaseCard
                 key={case_.id}
                 case_={case_}
-                onClick={() => console.log('Open case:', case_.id)}
+                onClick={() => setLocation(`/cases/${case_.id}`)}
               />
             ))}
           </TabsContent>
@@ -112,7 +119,7 @@ export default function CasesPage() {
               <CaseCard
                 key={case_.id}
                 case_={case_}
-                onClick={() => console.log('Open case:', case_.id)}
+                onClick={() => setLocation(`/cases/${case_.id}`)}
               />
             ))}
           </TabsContent>
@@ -122,7 +129,7 @@ export default function CasesPage() {
               <CaseCard
                 key={case_.id}
                 case_={case_}
-                onClick={() => console.log('Open case:', case_.id)}
+                onClick={() => setLocation(`/cases/${case_.id}`)}
               />
             ))}
           </TabsContent>
@@ -132,7 +139,7 @@ export default function CasesPage() {
               <CaseCard
                 key={case_.id}
                 case_={case_}
-                onClick={() => console.log('Open case:', case_.id)}
+                onClick={() => setLocation(`/cases/${case_.id}`)}
               />
             ))}
           </TabsContent>
@@ -142,11 +149,13 @@ export default function CasesPage() {
               <CaseCard
                 key={case_.id}
                 case_={case_}
-                onClick={() => console.log('Open case:', case_.id)}
+                onClick={() => setLocation(`/cases/${case_.id}`)}
               />
             ))}
           </TabsContent>
         </Tabs>
+
+        <NewCaseModal open={showNewCaseModal} onClose={() => setShowNewCaseModal(false)} />
       </div>
     </div>
   );

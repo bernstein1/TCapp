@@ -34,8 +34,8 @@ export default function NotificationItemExample() {
         <NotificationItem
           key={notification.id}
           notification={notification}
-          onClick={() => console.log('Notification clicked:', notification.id)}
-          onMarkRead={() => console.log('Mark as read:', notification.id)}
+          onClick={() => {}}
+          onMarkRead={() => {}}
         />
       ))}
     </div>

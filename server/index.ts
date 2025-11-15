@@ -2,6 +2,19 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
+// Validate required environment variables
+const requiredEnvVars = ['DATABASE_URL'];
+const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+if (missingEnvVars.length > 0) {
+  console.warn('⚠️  Warning: Missing recommended environment variables:');
+  missingEnvVars.forEach(varName => {
+    console.warn(`  - ${varName}`);
+  });
+  console.warn('\nApplication will run without database. API calls may fail.');
+  console.warn('See .env.example for required configuration.');
+}
+
 const app = express();
 
 declare module 'http' {
@@ -71,11 +84,9 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  const host = process.platform === 'darwin' ? 'localhost' : '0.0.0.0';
+
+  server.listen(port, host, () => {
+    log(`serving on ${host}:${port}`);
   });
 })();

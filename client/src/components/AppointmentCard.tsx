@@ -1,5 +1,5 @@
 import { format, formatDistanceToNow, isBefore, isToday, isTomorrow } from "date-fns";
-import { Calendar, Clock, Video, Phone, User } from "lucide-react";
+import { Calendar, Clock, Video, Phone, User, CalendarPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,13 +22,15 @@ type AppointmentCardProps = {
   onReschedule?: () => void;
   onCancel?: () => void;
   onJoin?: () => void;
+  onAddToCalendar?: () => void;
 };
 
-export function AppointmentCard({ 
-  appointment, 
+export function AppointmentCard({
+  appointment,
   onReschedule,
   onCancel,
-  onJoin 
+  onJoin,
+  onAddToCalendar
 }: AppointmentCardProps) {
   const now = new Date();
   const appointmentDate = appointment.dateTime;
@@ -85,6 +87,19 @@ export function AppointmentCard({
             <span>{format(appointmentDate, "h:mm a")}</span>
           </div>
         </div>
+
+        {/* Add to Calendar Button */}
+        {isUpcoming && onAddToCalendar && (
+          <Button
+            variant="outline"
+            className="w-full mb-3"
+            onClick={onAddToCalendar}
+            data-testid={`button-add-to-calendar-${appointment.id}`}
+          >
+            <CalendarPlus className="h-4 w-4 mr-2" />
+            Add to Calendar
+          </Button>
+        )}
 
         <div className="flex gap-2">
           {canJoin && appointment.format === "video" && (

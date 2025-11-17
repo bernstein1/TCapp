@@ -42,6 +42,13 @@ export default function Dashboard() {
       completed: false,
       required: false,
     },
+    {
+      id: "4",
+      title: "Create your first case",
+      description: "Start a conversation with our support team",
+      completed: false,
+      required: false,
+    },
   ]);
 
   const mockCases: Case[] = [
@@ -96,13 +103,72 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen p-4 lg:p-8">
       <div className="max-w-7xl mx-auto">
+        {/* Hero/Welcome Banner */}
+        <Card className="mb-6 bg-gradient-to-r from-primary/10 via-primary/5 to-background">
+          <div className="p-6 lg:p-8">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <div>
+                <h1 className="font-display font-bold text-3xl lg:text-4xl mb-2" data-testid="text-dashboard-title">
+                  Welcome back, John
+                </h1>
+                <p className="text-muted-foreground text-lg">
+                  Here's what's happening with your health benefits
+                </p>
+              </div>
+              <Button
+                size="lg"
+                className="w-full lg:w-auto"
+                data-testid="button-hero-new-case"
+                onClick={() => setShowNewCaseModal(true)}
+              >
+                <MessageCircle className="mr-2 h-5 w-5" />
+                Start New Case
+              </Button>
+            </div>
+          </div>
+        </Card>
+
+        {/* Quick Actions - Center Top */}
         <div className="mb-6">
-          <h1 className="font-display font-bold text-3xl mb-2" data-testid="text-dashboard-title">
-            Welcome back
-          </h1>
-          <p className="text-muted-foreground">
-            Here's what's happening with your health benefits
-          </p>
+          <h2 className="font-display font-bold text-xl mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <Button
+              variant="outline"
+              className="h-24 flex flex-col gap-2"
+              data-testid="button-quick-wallet"
+              onClick={() => setLocation("/wallet")}
+            >
+              <CreditCard className="h-6 w-6" />
+              <span className="text-sm">View ID Card</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="h-24 flex flex-col gap-2"
+              data-testid="button-quick-schedule"
+              onClick={() => setLocation("/schedule")}
+            >
+              <Calendar className="h-6 w-6" />
+              <span className="text-sm">Schedule</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="h-24 flex flex-col gap-2"
+              data-testid="button-quick-documents"
+              onClick={() => setLocation("/documents")}
+            >
+              <FileText className="h-6 w-6" />
+              <span className="text-sm">Documents</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="h-24 flex flex-col gap-2"
+              data-testid="button-quick-message"
+              onClick={() => setShowNewCaseModal(true)}
+            >
+              <MessageCircle className="h-6 w-6" />
+              <span className="text-sm">Message Us</span>
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -120,6 +186,7 @@ export default function Dashboard() {
                 if (task?.title.includes("dependent")) setLocation("/settings");
                 if (task?.title.includes("insurance card")) setLocation("/documents");
                 if (task?.title.includes("phone")) setLocation("/settings");
+                if (task?.title.includes("first case")) setShowNewCaseModal(true);
               }}
             />
 
@@ -158,8 +225,10 @@ export default function Dashboard() {
                 Start New Conversation
               </Button>
             </div>
+          </div>
 
-            {/* Notifications */}
+          <div className="space-y-6">
+            {/* Notifications - Moved to Right Side */}
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-display font-bold text-xl">Notifications</h2>
@@ -189,9 +258,7 @@ export default function Dashboard() {
                 </div>
               </Card>
             </div>
-          </div>
 
-          <div className="space-y-6">
             {/* Upcoming Appointment */}
             <div>
               <h2 className="font-display font-bold text-xl mb-4">Upcoming Appointment</h2>
@@ -200,50 +267,11 @@ export default function Dashboard() {
                 onReschedule={() => setLocation("/schedule")}
                 onCancel={() => setLocation("/schedule")}
                 onJoin={() => setLocation("/schedule")}
+                onAddToCalendar={() => {
+                  // In a real app, this would generate an .ics file or use a calendar API
+                  alert("Adding appointment to calendar...");
+                }}
               />
-            </div>
-
-            {/* Quick Actions */}
-            <div>
-              <h2 className="font-display font-bold text-xl mb-4">Quick Actions</h2>
-              <div className="grid grid-cols-2 gap-3">
-                <Button
-                  variant="outline"
-                  className="h-24 flex flex-col gap-2"
-                  data-testid="button-quick-wallet"
-                  onClick={() => setLocation("/wallet")}
-                >
-                  <CreditCard className="h-6 w-6" />
-                  <span className="text-sm">View ID Card</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  className="h-24 flex flex-col gap-2"
-                  data-testid="button-quick-schedule"
-                  onClick={() => setLocation("/schedule")}
-                >
-                  <Calendar className="h-6 w-6" />
-                  <span className="text-sm">Schedule</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  className="h-24 flex flex-col gap-2"
-                  data-testid="button-quick-documents"
-                  onClick={() => setLocation("/documents")}
-                >
-                  <FileText className="h-6 w-6" />
-                  <span className="text-sm">Documents</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  className="h-24 flex flex-col gap-2"
-                  data-testid="button-quick-message"
-                  onClick={() => setShowNewCaseModal(true)}
-                >
-                  <MessageCircle className="h-6 w-6" />
-                  <span className="text-sm">Message Us</span>
-                </Button>
-              </div>
             </div>
           </div>
         </div>

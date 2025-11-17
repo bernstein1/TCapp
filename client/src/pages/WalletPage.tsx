@@ -192,47 +192,101 @@ export default function WalletPage() {
               </TabsContent>
             </Tabs>
 
-            {/* Quick Actions */}
+            {/* Personal Information - Moved Below Cards */}
             <Card>
               <div className="p-6">
-                <h3 className="font-display font-bold text-lg mb-4 flex items-center">
-                  <Smartphone className="mr-2 h-5 w-5" />
-                  Quick Actions
-                </h3>
-                <div className="grid grid-cols-2 gap-3">
+                <h3 className="font-display font-bold text-lg mb-4">Personal Information</h3>
+
+                <div className="space-y-4">
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Full Name</div>
+                    <div className="font-medium">John Doe</div>
+                  </div>
+
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Date of Birth</div>
+                    <div className="font-medium">January 15, 1985</div>
+                  </div>
+
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Email</div>
+                    <div className="font-medium">john.doe@example.com</div>
+                  </div>
+
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Phone</div>
+                    <div className="font-medium">(555) 123-4567</div>
+                  </div>
+                </div>
+
+                <Button
+                  variant="outline"
+                  className="w-full mt-6"
+                  data-testid="button-edit-profile"
+                >
+                  Edit Information
+                </Button>
+              </div>
+            </Card>
+
+            {/* Dependents - Moved Below Cards */}
+            <Card>
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-display font-bold text-lg">Dependents</h3>
                   <Button
+                    size="sm"
                     variant="outline"
-                    className="h-auto py-4 flex flex-col gap-2"
-                    onClick={() => handleAddToWallet("apple")}
+                    data-testid="button-add-dependent"
                   >
-                    <QrCode className="h-6 w-6" />
-                    <span className="text-sm">Add to Apple Wallet</span>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="h-auto py-4 flex flex-col gap-2"
-                    onClick={() => handleAddToWallet("google")}
-                  >
-                    <Smartphone className="h-6 w-6" />
-                    <span className="text-sm">Add to Google Pay</span>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="h-auto py-4 flex flex-col gap-2"
-                    onClick={handlePrintAll}
-                  >
-                    <CreditCard className="h-6 w-6" />
-                    <span className="text-sm">Print All Cards</span>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="h-auto py-4 flex flex-col gap-2"
-                    onClick={handleProviderDirectory}
-                  >
-                    <Building2 className="h-6 w-6" />
-                    <span className="text-sm">Provider Directory</span>
+                    <UserPlus className="h-4 w-4 mr-2" />
+                    Add
                   </Button>
                 </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 rounded-md bg-accent/50">
+                    <div>
+                      <div className="font-medium">Jane Doe</div>
+                      <div className="text-sm text-muted-foreground">Spouse</div>
+                    </div>
+                    <Button size="sm" variant="ghost" data-testid="button-view-dependent-1">
+                      View
+                    </Button>
+                  </div>
+
+                  <div className="flex items-center justify-between p-3 rounded-md bg-accent/50">
+                    <div>
+                      <div className="font-medium">Emily Doe</div>
+                      <div className="text-sm text-muted-foreground">Child</div>
+                    </div>
+                    <Button size="sm" variant="ghost" data-testid="button-view-dependent-2">
+                      View
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Emergency Contacts - Moved Below Cards */}
+            <Card>
+              <div className="p-6">
+                <h3 className="font-display font-bold text-lg mb-4">Emergency Contacts</h3>
+
+                <div className="space-y-3">
+                  <div>
+                    <div className="font-medium">Jane Doe</div>
+                    <div className="text-sm text-muted-foreground">(555) 987-6543</div>
+                  </div>
+                </div>
+
+                <Button
+                  variant="outline"
+                  className="w-full mt-4"
+                  data-testid="button-manage-contacts"
+                >
+                  Manage Contacts
+                </Button>
               </div>
             </Card>
           </div>
@@ -284,102 +338,6 @@ export default function WalletPage() {
                     <Badge variant="outline" className="bg-green-500/10 text-green-700 dark:text-green-400">Active</Badge>
                   </div>
                 </div>
-              </div>
-            </Card>
-
-            {/* Personal Information */}
-            <Card>
-              <div className="p-6">
-                <h3 className="font-display font-bold text-lg mb-4">Personal Information</h3>
-
-                <div className="space-y-4">
-                  <div>
-                    <div className="text-sm text-muted-foreground mb-1">Full Name</div>
-                    <div className="font-medium">John Doe</div>
-                  </div>
-
-                  <div>
-                    <div className="text-sm text-muted-foreground mb-1">Date of Birth</div>
-                    <div className="font-medium">January 15, 1985</div>
-                  </div>
-
-                  <div>
-                    <div className="text-sm text-muted-foreground mb-1">Email</div>
-                    <div className="font-medium">john.doe@example.com</div>
-                  </div>
-
-                  <div>
-                    <div className="text-sm text-muted-foreground mb-1">Phone</div>
-                    <div className="font-medium">(555) 123-4567</div>
-                  </div>
-                </div>
-
-                <Button
-                  variant="outline"
-                  className="w-full mt-6"
-                  data-testid="button-edit-profile"
-                >
-                  Edit Information
-                </Button>
-              </div>
-            </Card>
-
-            <Card>
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-display font-bold text-lg">Dependents</h3>
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    data-testid="button-add-dependent"
-                  >
-                    <UserPlus className="h-4 w-4 mr-2" />
-                    Add
-                  </Button>
-                </div>
-                
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 rounded-md bg-accent/50">
-                    <div>
-                      <div className="font-medium">Jane Doe</div>
-                      <div className="text-sm text-muted-foreground">Spouse</div>
-                    </div>
-                    <Button size="sm" variant="ghost" data-testid="button-view-dependent-1">
-                      View
-                    </Button>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 rounded-md bg-accent/50">
-                    <div>
-                      <div className="font-medium">Emily Doe</div>
-                      <div className="text-sm text-muted-foreground">Child</div>
-                    </div>
-                    <Button size="sm" variant="ghost" data-testid="button-view-dependent-2">
-                      View
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            <Card>
-              <div className="p-6">
-                <h3 className="font-display font-bold text-lg mb-4">Emergency Contacts</h3>
-                
-                <div className="space-y-3">
-                  <div>
-                    <div className="font-medium">Jane Doe</div>
-                    <div className="text-sm text-muted-foreground">(555) 987-6543</div>
-                  </div>
-                </div>
-
-                <Button 
-                  variant="outline" 
-                  className="w-full mt-4"
-                  data-testid="button-manage-contacts"
-                >
-                  Manage Contacts
-                </Button>
               </div>
             </Card>
           </div>

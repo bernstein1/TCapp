@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Share2, Download, RotateCcw } from "lucide-react";
+import { Share2, Download, RotateCcw, Copy, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type InsuranceCard = {
@@ -24,6 +24,14 @@ type WalletCardProps = {
 
 export function WalletCard({ card, onShare, onDownload }: WalletCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyMemberId = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(card.memberId);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="perspective-1000">
@@ -131,6 +139,24 @@ export function WalletCard({ card, onShare, onDownload }: WalletCardProps) {
       </div>
 
       <div className="flex gap-2 mt-4">
+        <Button
+          variant="outline"
+          className="flex-1"
+          onClick={handleCopyMemberId}
+          data-testid="button-copy-member-id"
+        >
+          {copied ? (
+            <>
+              <Check className="h-4 w-4 mr-2" />
+              Copied!
+            </>
+          ) : (
+            <>
+              <Copy className="h-4 w-4 mr-2" />
+              Copy Member ID
+            </>
+          )}
+        </Button>
         <Button
           variant="outline"
           className="flex-1"

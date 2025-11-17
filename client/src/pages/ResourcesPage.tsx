@@ -2,8 +2,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Clock, ExternalLink, BookOpen, Megaphone } from "lucide-react";
+import { Calendar, Clock, ExternalLink, BookOpen, Megaphone, Bot, FileText, CheckCircle2 } from "lucide-react";
 import { format } from "date-fns";
+import { useState } from "react";
 
 type Announcement = {
   id: string;
@@ -34,7 +35,17 @@ type Webinar = {
   registered: boolean;
 };
 
+type Guide = {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  steps: number;
+  estimatedTime: string;
+};
+
 export default function ResourcesPage() {
+  const [showAIAgent, setShowAIAgent] = useState(false);
   // Mock data
   const announcements: Announcement[] = [
     {
@@ -129,6 +140,57 @@ export default function ResourcesPage() {
     },
   ];
 
+  const guides: Guide[] = [
+    {
+      id: "1",
+      title: "How to File a Claim",
+      description: "Step-by-step instructions for submitting medical, dental, and vision claims through the TouchCare portal.",
+      category: "Claims",
+      steps: 5,
+      estimatedTime: "10 minutes",
+    },
+    {
+      id: "2",
+      title: "Finding In-Network Providers",
+      description: "Learn how to search and verify providers in your network to maximize coverage and minimize out-of-pocket costs.",
+      category: "Provider Network",
+      steps: 4,
+      estimatedTime: "8 minutes",
+    },
+    {
+      id: "3",
+      title: "Understanding Your Benefits Summary",
+      description: "A comprehensive guide to reading and understanding your Summary of Benefits and Coverage (SBC) document.",
+      category: "Coverage",
+      steps: 6,
+      estimatedTime: "12 minutes",
+    },
+    {
+      id: "4",
+      title: "Setting Up Direct Deposit for Reimbursements",
+      description: "Quick guide to configure direct deposit for faster claim reimbursements and FSA distributions.",
+      category: "Account Management",
+      steps: 3,
+      estimatedTime: "5 minutes",
+    },
+    {
+      id: "5",
+      title: "Using Your FSA Card",
+      description: "Everything you need to know about using your Flexible Spending Account card for eligible expenses.",
+      category: "FSA",
+      steps: 4,
+      estimatedTime: "7 minutes",
+    },
+    {
+      id: "6",
+      title: "Requesting Prior Authorization",
+      description: "Step-by-step process for obtaining prior authorization for procedures, medications, or specialist visits.",
+      category: "Coverage",
+      steps: 7,
+      estimatedTime: "15 minutes",
+    },
+  ];
+
   return (
     <div className="min-h-screen p-4 lg:p-8">
       <div className="max-w-7xl mx-auto">
@@ -141,11 +203,41 @@ export default function ResourcesPage() {
           </p>
         </div>
 
+        {/* AI Agent Feature */}
+        <Card className="mb-6 bg-gradient-to-r from-chart-2/10 via-chart-2/5 to-background">
+          <div className="p-6">
+            <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+              <div className="h-16 w-16 rounded-2xl bg-chart-2/20 flex items-center justify-center shrink-0">
+                <Bot className="h-8 w-8 text-chart-2" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-display font-bold text-xl mb-2">TouchCare AI Assistant</h3>
+                <p className="text-muted-foreground">
+                  Get instant answers to your benefits questions with our AI-powered assistant. Available 24/7 to help you understand your coverage, find providers, and navigate your health benefits.
+                </p>
+              </div>
+              <Button
+                size="lg"
+                className="w-full lg:w-auto"
+                onClick={() => setShowAIAgent(true)}
+                data-testid="button-ai-agent"
+              >
+                <Bot className="mr-2 h-5 w-5" />
+                Chat with AI Assistant
+              </Button>
+            </div>
+          </div>
+        </Card>
+
         <Tabs defaultValue="announcements" className="w-full">
-          <TabsList className="mb-6 w-full sm:w-auto">
+          <TabsList className="mb-6 w-full sm:w-auto grid grid-cols-2 sm:grid-cols-4">
             <TabsTrigger value="announcements" data-testid="tab-announcements">
               <Megaphone className="h-4 w-4 mr-2" />
               Announcements
+            </TabsTrigger>
+            <TabsTrigger value="guides" data-testid="tab-guides">
+              <FileText className="h-4 w-4 mr-2" />
+              Guides
             </TabsTrigger>
             <TabsTrigger value="articles" data-testid="tab-articles">
               <BookOpen className="h-4 w-4 mr-2" />
@@ -182,6 +274,52 @@ export default function ResourcesPage() {
                 </div>
               </Card>
             ))}
+          </TabsContent>
+
+          {/* Guides */}
+          <TabsContent value="guides">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {guides.map((guide) => (
+                <Card
+                  key={guide.id}
+                  className="hover-elevate cursor-pointer transition-all"
+                  data-testid={`guide-${guide.id}`}
+                >
+                  <div className="p-6">
+                    <div className="flex items-start gap-4 mb-4">
+                      <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <FileText className="h-6 w-6 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant="secondary">{guide.category}</Badge>
+                          <span className="text-xs text-muted-foreground flex items-center gap-1">
+                            <Clock className="h-3 w-3" />
+                            {guide.estimatedTime}
+                          </span>
+                        </div>
+                        <h3 className="font-semibold text-lg mb-2">{guide.title}</h3>
+                      </div>
+                    </div>
+
+                    <p className="text-sm text-muted-foreground mb-4">
+                      {guide.description}
+                    </p>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <CheckCircle2 className="h-4 w-4" />
+                        <span>{guide.steps} steps</span>
+                      </div>
+                      <Button variant="ghost" size="sm">
+                        View Guide
+                        <ExternalLink className="ml-2 h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
           </TabsContent>
 
           {/* Blog Articles */}

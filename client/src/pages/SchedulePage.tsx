@@ -65,6 +65,10 @@ export default function SchedulePage() {
                   onReschedule={() => {}}
                   onCancel={() => {}}
                   onJoin={() => {}}
+                  onAddToCalendar={() => {
+                    // In a real app, this would generate an .ics file or use a calendar API
+                    alert(`Adding ${appointment.type} to calendar...`);
+                  }}
                 />
               ))}
             </div>

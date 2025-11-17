@@ -10,6 +10,7 @@ import {
   BookOpen,
   Calculator,
   Menu,
+  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./ThemeToggle";
@@ -22,6 +23,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { NewCaseModal } from "@/components/NewCaseModal";
 import { useState } from "react";
 
 const navigation = [
@@ -43,22 +45,33 @@ type MemberLayoutProps = {
 export function MemberLayout({ children }: MemberLayoutProps) {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showNewCaseModal, setShowNewCaseModal] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:border-r lg:bg-sidebar">
-        <div className="flex items-center gap-3 p-6 border-b">
-          <img
-            src="/assets/logos/TC-logo-horizontal-blue.png"
-            alt="TouchCare"
-            className="h-8 w-auto dark:hidden"
-          />
-          <img
-            src="/assets/logos/TouchCare_HorizontalLogo-White-RGB (1).png"
-            alt="TouchCare"
-            className="h-8 w-auto hidden dark:block"
-          />
+        <div className="p-6 border-b space-y-3">
+          <div className="flex items-center gap-3">
+            <img
+              src="/assets/logos/TC-logo-horizontal-blue.png"
+              alt="TouchCare"
+              className="h-8 w-auto dark:hidden"
+            />
+            <img
+              src="/assets/logos/TouchCare_HorizontalLogo-White-RGB (1).png"
+              alt="TouchCare"
+              className="h-8 w-auto hidden dark:block"
+            />
+          </div>
+          <Button
+            className="w-full"
+            onClick={() => setShowNewCaseModal(true)}
+            data-testid="button-get-help-now-desktop"
+          >
+            <Zap className="mr-2 h-4 w-4" />
+            Get Help Now
+          </Button>
         </div>
 
         <nav className="flex-1 p-4 space-y-1">
@@ -112,7 +125,7 @@ export function MemberLayout({ children }: MemberLayoutProps) {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-64 p-0">
-              <SheetHeader className="p-6 border-b">
+              <SheetHeader className="p-6 border-b space-y-3">
                 <SheetTitle className="text-left">
                   <img
                     src="/assets/logos/TC-logo-horizontal-blue.png"
@@ -125,6 +138,17 @@ export function MemberLayout({ children }: MemberLayoutProps) {
                     className="h-8 w-auto hidden dark:block"
                   />
                 </SheetTitle>
+                <Button
+                  className="w-full"
+                  onClick={() => {
+                    setShowNewCaseModal(true);
+                    setMobileMenuOpen(false);
+                  }}
+                  data-testid="button-get-help-now-mobile"
+                >
+                  <Zap className="mr-2 h-4 w-4" />
+                  Get Help Now
+                </Button>
               </SheetHeader>
               <nav className="p-4 space-y-1">
                 {navigation.map((item) => {
@@ -203,6 +227,8 @@ export function MemberLayout({ children }: MemberLayoutProps) {
           </div>
         </nav>
       </div>
+
+      <NewCaseModal open={showNewCaseModal} onClose={() => setShowNewCaseModal(false)} />
     </div>
   );
 }

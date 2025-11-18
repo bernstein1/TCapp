@@ -34,10 +34,12 @@ export function WalletCard({ card, onShare, onDownload }: WalletCardProps) {
   };
 
   return (
-    <div className="perspective-1000">
+    <div className="perspective-1500 group">
       <div
         className={cn(
-          "relative w-full h-56 transition-transform duration-500 transform-style-3d cursor-pointer",
+          "relative w-full h-56 transition-all duration-700 transform-style-3d cursor-pointer",
+          "hover:scale-105 active:scale-95",
+          "motion-reduce:hover:scale-100 motion-reduce:active:scale-100 motion-reduce:transition-none",
           isFlipped && "rotate-y-180"
         )}
         onClick={() => setIsFlipped(!isFlipped)}
@@ -48,10 +50,12 @@ export function WalletCard({ card, onShare, onDownload }: WalletCardProps) {
           className={cn(
             "absolute inset-0 backface-hidden overflow-hidden p-6",
             "bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800",
-            "shadow-[0_8px_32px_rgba(0,0,0,0.3)]",
+            "shadow-[0_20px_60px_rgba(0,0,0,0.4)] hover:shadow-[0_25px_80px_rgba(0,0,0,0.5)]",
+            "transition-shadow duration-500 motion-reduce:shadow-[0_8px_32px_rgba(0,0,0,0.3)]",
             "text-white",
             "before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/20 before:to-transparent before:pointer-events-none",
-            "after:absolute after:inset-0 after:bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_50%)] after:pointer-events-none"
+            "after:absolute after:inset-0 after:bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_50%)] after:pointer-events-none",
+            "hover:before:from-white/30 before:transition-all before:duration-500"
           )}
         >
           <div className="flex flex-col h-full relative z-10">
@@ -96,10 +100,12 @@ export function WalletCard({ card, onShare, onDownload }: WalletCardProps) {
           className={cn(
             "absolute inset-0 backface-hidden rotate-y-180 overflow-hidden p-6",
             "bg-gradient-to-br from-blue-700 via-indigo-800 to-blue-900",
-            "shadow-[0_8px_32px_rgba(0,0,0,0.3)]",
+            "shadow-[0_20px_60px_rgba(0,0,0,0.4)] hover:shadow-[0_25px_80px_rgba(0,0,0,0.5)]",
+            "transition-shadow duration-500 motion-reduce:shadow-[0_8px_32px_rgba(0,0,0,0.3)]",
             "text-white",
             "before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/15 before:to-transparent before:pointer-events-none",
-            "after:absolute after:inset-0 after:bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_50%)] after:pointer-events-none"
+            "after:absolute after:inset-0 after:bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_50%)] after:pointer-events-none",
+            "hover:before:from-white/25 before:transition-all before:duration-500"
           )}
         >
           <div className="flex flex-col h-full text-sm relative z-10">
@@ -185,17 +191,42 @@ export function WalletCard({ card, onShare, onDownload }: WalletCardProps) {
 
       <style>
         {`
-          .perspective-1000 {
-            perspective: 1000px;
+          .perspective-1500 {
+            perspective: 1500px;
           }
           .transform-style-3d {
             transform-style: preserve-3d;
           }
           .backface-hidden {
             backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
           }
           .rotate-y-180 {
             transform: rotateY(180deg);
+          }
+
+          /* Smooth hardware-accelerated animations */
+          .perspective-1500 > div {
+            will-change: transform;
+          }
+
+          /* Motion reduce support for 3D transforms */
+          @media (prefers-reduced-motion: reduce) {
+            .perspective-1500 {
+              perspective: none;
+            }
+            .transform-style-3d {
+              transform-style: flat;
+            }
+            .rotate-y-180 {
+              transform: none;
+              opacity: 0;
+              pointer-events: none;
+            }
+            .rotate-y-180 ~ .rotate-y-180 {
+              opacity: 1;
+              pointer-events: auto;
+            }
           }
         `}
       </style>

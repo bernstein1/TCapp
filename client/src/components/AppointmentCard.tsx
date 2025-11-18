@@ -46,8 +46,9 @@ export function AppointmentCard({
   };
 
   return (
-    <Card 
-      className="hover-elevate"
+    <Card
+      interactive
+      className="group transition-all duration-300 hover:-translate-y-1 motion-reduce:hover:translate-y-0 motion-reduce:transition-none"
       data-testid={`card-appointment-${appointment.id}`}
     >
       <div className="p-4">

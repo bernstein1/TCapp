@@ -322,4 +322,92 @@
   .glass-mobile-nav {
     @apply backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 border-white/20 dark:border-white/10;
   }
+
+  /* Premium glass effect for calculators and special cards */
+  .glass-effect {
+    @apply backdrop-blur-2xl bg-gradient-to-br from-white/80 to-white/60 dark:from-gray-900/80 dark:to-gray-800/60;
+    @apply border border-white/40 dark:border-gray-700/40;
+    @apply shadow-2xl shadow-primary/10 dark:shadow-primary/5;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glass-effect:hover {
+    @apply shadow-2xl shadow-primary/20 dark:shadow-primary/10;
+    transform: translateY(-2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glass-effect {
+      transition: none;
+    }
+    .glass-effect:hover {
+      transform: none;
+    }
+  }
+
+  /* Glass input for form fields */
+  .glass-input {
+    @apply backdrop-blur-lg bg-white/50 dark:bg-gray-900/50;
+    @apply border-white/30 dark:border-gray-700/30;
+  }
+
+  /* Gradient overlays for premium cards */
+  .gradient-overlay {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gradient-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(var(--primary-rgb), 0.05) 0%,
+      rgba(var(--secondary-rgb), 0.05) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+
+  .gradient-overlay:hover::before {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gradient-overlay::before {
+      transition: none;
+    }
+  }
+
+  /* Premium Typography */
+  .heading-hero {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold font-display;
+    @apply bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent;
+  }
+
+  .heading-section {
+    @apply text-2xl md:text-3xl font-semibold;
+  }
+
+  .heading-card {
+    @apply text-xl font-semibold;
+  }
+
+  /* Subtle glow effect for premium headings */
+  .text-glow {
+    text-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+  }
+
+  .text-glow-sm {
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .text-glow,
+    .text-glow-sm {
+      text-shadow: none;
+    }
+  }
 }

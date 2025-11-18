@@ -39,7 +39,8 @@ export function CaseCard({ case_, onClick }: CaseCardProps) {
 
   return (
     <Card
-      className="hover-elevate active-elevate-2 cursor-pointer transition-all"
+      interactive
+      className="group transition-all duration-300 hover:-translate-y-1 motion-reduce:hover:translate-y-0 motion-reduce:transition-none"
       onClick={onClick}
       data-testid={`card-case-${case_.id}`}
     >

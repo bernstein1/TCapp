@@ -14,6 +14,7 @@ import { CommuterInputs, CommuterResults, FilingStatus } from "@shared/schema";
 import { usePDFExport } from "@/lib/pdf/use-pdf-export";
 import { usePrintContext } from "@/context/print-context";
 import CommuterPrintSummary from "@/components/print/commuter-print-summary";
+import { AnimatedCurrency, AnimatedPercentage } from "@/components/ui/animated-number";
 
 const FILING_STATUS_OPTIONS: { value: FilingStatus; label: string }[] = [
   { value: "single", label: describeFilingStatus("single") },
@@ -218,20 +219,23 @@ export default function CommuterCalculator() {
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Transit Savings</span>
                 <span className="text-lg font-semibold text-foreground" data-testid="result-transit-savings">
-                  ${Math.round(results.transitSavings).toLocaleString()}
+                  <AnimatedCurrency value={Math.round(results.transitSavings)} />
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Parking Savings</span>
                 <span className="text-lg font-semibold text-foreground" data-testid="result-parking-savings">
-                  ${Math.round(results.parkingSavings).toLocaleString()}
+                  <AnimatedCurrency value={Math.round(results.parkingSavings)} />
                 </span>
               </div>
               <div className="border-t border-border pt-4">
                 <div className="flex justify-between items-center">
                   <span className="text-foreground font-medium">Total Tax Savings</span>
                   <span className="text-xl font-bold text-primary" data-testid="result-total-savings">
-                    ${Math.round(results.totalSavings).toLocaleString()}
+                    <AnimatedCurrency
+                      value={Math.round(results.totalSavings)}
+                      className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-gradient"
+                    />
                   </span>
                 </div>
               </div>
@@ -266,7 +270,7 @@ export default function CommuterCalculator() {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Tax Rate:</span>
                   <span className="text-foreground font-mono" data-testid="math-rate">
-                    {marginalRate}%
+                    <AnimatedPercentage value={marginalRate} />
                   </span>
                 </div>
                 <div className="flex justify-between">

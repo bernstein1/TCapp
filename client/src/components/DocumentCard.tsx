@@ -51,14 +51,15 @@ export function DocumentCard({
   const Icon = config.icon;
 
   return (
-    <Card 
-      className="hover-elevate active-elevate-2 cursor-pointer transition-all group"
+    <Card
+      interactive
+      className="group transition-all duration-300 hover:-translate-y-1 motion-reduce:hover:translate-y-0 motion-reduce:transition-none overflow-hidden"
       onClick={onView}
       data-testid={`card-document-${document.id}`}
     >
       <div className="p-4">
         <div className="flex items-start gap-3 mb-3">
-          <div className={`p-3 rounded-lg bg-accent ${config.color}`}>
+          <div className={`p-3 rounded-lg bg-accent ${config.color} transition-transform duration-300 group-hover:scale-110 motion-reduce:group-hover:scale-100`}>
             <Icon className="h-6 w-6" />
           </div>
           
@@ -89,7 +90,7 @@ export function DocumentCard({
           </div>
         </div>
 
-        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 motion-reduce:opacity-100">
           <Button
             size="sm"
             variant="outline"

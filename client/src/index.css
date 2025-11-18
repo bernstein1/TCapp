@@ -381,3 +381,34 @@
     }
   }
 }
+
+  /* Premium Typography */
+  .heading-hero {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold font-display;
+    @apply bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent;
+  }
+
+  .heading-section {
+    @apply text-2xl md:text-3xl font-semibold;
+  }
+
+  .heading-card {
+    @apply text-xl font-semibold;
+  }
+
+  /* Subtle glow effect for premium headings */
+  .text-glow {
+    text-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+  }
+
+  .text-glow-sm {
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .text-glow,
+    .text-glow-sm {
+      text-shadow: none;
+    }
+  }
+}

@@ -15,12 +15,15 @@ import {
   ChevronRight
 } from "lucide-react";
 
+// Check if user prefers reduced motion
+const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 // Animation variants for staggered entry
 const containerVariants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: prefersReducedMotion ? 1 : 0 },
   visible: {
     opacity: 1,
-    transition: {
+    transition: prefersReducedMotion ? {} : {
       staggerChildren: 0.1,
       delayChildren: 0.1
     }
@@ -28,11 +31,11 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: prefersReducedMotion ? 1 : 0, y: prefersReducedMotion ? 0 : 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
+    transition: prefersReducedMotion ? {} : {
       type: "spring",
       stiffness: 100,
       damping: 12

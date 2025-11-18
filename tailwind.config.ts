@@ -88,6 +88,15 @@ export default {
         mono: ["var(--font-mono)"],
         display: ["var(--font-display)"],
       },
+      textShadow: {
+        sm: "0 1px 2px rgba(0, 0, 0, 0.05)",
+        DEFAULT: "0 2px 4px rgba(0, 0, 0, 0.1)",
+        md: "0 4px 8px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08)",
+        lg: "0 8px 16px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1)",
+        xl: "0 12px 24px rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0, 0, 0, 0.15)",
+        "2xl": "0 16px 32px rgba(0, 0, 0, 0.25), 0 8px 16px rgba(0, 0, 0, 0.2)",
+        none: "none",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -139,5 +148,19 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+    // Text shadow plugin
+    function ({ matchUtilities, theme }: any) {
+      matchUtilities(
+        {
+          "text-shadow": (value: string) => ({
+            textShadow: value,
+          }),
+        },
+        { values: theme("textShadow") }
+      );
+    },
+  ],
 } satisfies Config;

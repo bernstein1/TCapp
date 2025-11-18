@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   MessageCircle,
-  CreditCard,
   Calendar,
   FileText,
   ChevronRight
@@ -109,7 +108,14 @@ export default function Dashboard() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <h1 className="font-display font-bold text-3xl lg:text-4xl mb-2" data-testid="text-dashboard-title">
-                  Welcome back, John
+                  Welcome back,{" "}
+                  <span
+                    className="cursor-pointer hover:text-primary transition-colors underline decoration-primary/30 hover:decoration-primary"
+                    onClick={() => setLocation("/settings")}
+                    data-testid="link-user-name"
+                  >
+                    John
+                  </span>
                 </h1>
                 <p className="text-muted-foreground text-lg">
                   Here's what's happening with your health benefits
@@ -131,16 +137,7 @@ export default function Dashboard() {
         {/* Quick Actions - Center Top */}
         <div className="mb-6">
           <h2 className="font-display font-bold text-xl mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <Button
-              variant="outline"
-              className="h-24 flex flex-col gap-2"
-              data-testid="button-quick-wallet"
-              onClick={() => setLocation("/wallet")}
-            >
-              <CreditCard className="h-6 w-6" />
-              <span className="text-sm">View ID Card</span>
-            </Button>
+          <div className="grid grid-cols-3 gap-3">
             <Button
               variant="outline"
               className="h-24 flex flex-col gap-2"

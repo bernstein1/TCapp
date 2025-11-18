@@ -1,7 +1,8 @@
-import { Phone, MessageCircle, ExternalLink } from "lucide-react";
+import { Phone, MessageCircle, ExternalLink, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 
 export type ServiceType = "partner" | "internal";
 export type AccessMethod = "call" | "message" | "both";
@@ -24,11 +25,12 @@ type ServiceCardProps = {
 };
 
 export function ServiceCard({ service, onCall, onMessage }: ServiceCardProps) {
+  const navigate = useNavigate();
   const showCall = service.accessMethod === "call" || service.accessMethod === "both";
   const showMessage = service.accessMethod === "message" || service.accessMethod === "both";
 
   return (
-    <Card 
+    <Card
       className="hover-elevate"
       data-testid={`card-service-${service.id}`}
     >
@@ -36,14 +38,14 @@ export function ServiceCard({ service, onCall, onMessage }: ServiceCardProps) {
         <div className="flex items-start gap-4 mb-4">
           {service.logo && (
             <div className="h-12 w-12 rounded-lg bg-accent flex items-center justify-center shrink-0">
-              <img 
-                src={service.logo} 
-                alt={service.name} 
+              <img
+                src={service.logo}
+                alt={service.name}
                 className="h-8 w-8 object-contain"
               />
             </div>
           )}
-          
+
           <div className="flex-1 min-w-0">
             <div className="flex items-start gap-2 mb-2">
               <h3 className="font-display font-bold text-lg flex-1">
@@ -53,7 +55,7 @@ export function ServiceCard({ service, onCall, onMessage }: ServiceCardProps) {
                 {service.type === "partner" ? "Partner" : "TouchCare"}
               </Badge>
             </div>
-            
+
             <p className="text-sm text-muted-foreground">
               {service.description}
             </p>
@@ -77,26 +79,39 @@ export function ServiceCard({ service, onCall, onMessage }: ServiceCardProps) {
         )}
 
         <div className="flex gap-2">
-          {showCall && service.phoneNumber && (
+          {service.type === "internal" ? (
             <Button
               className="flex-1"
-              onClick={onCall}
-              data-testid={`button-call-${service.id}`}
+              onClick={() => navigate("/schedule")}
+              data-testid={`button-schedule-${service.id}`}
             >
-              <Phone className="h-4 w-4 mr-2" />
-              Call Now
+              <Calendar className="h-4 w-4 mr-2" />
+              Schedule
             </Button>
-          )}
-          {showMessage && (
-            <Button
-              variant={showCall ? "outline" : "default"}
-              className="flex-1"
-              onClick={onMessage}
-              data-testid={`button-message-${service.id}`}
-            >
-              <MessageCircle className="h-4 w-4 mr-2" />
-              Send Message
-            </Button>
+          ) : (
+            <>
+              {showCall && service.phoneNumber && (
+                <Button
+                  className="flex-1"
+                  onClick={onCall}
+                  data-testid={`button-call-${service.id}`}
+                >
+                  <Phone className="h-4 w-4 mr-2" />
+                  Call Now
+                </Button>
+              )}
+              {showMessage && (
+                <Button
+                  variant={showCall ? "outline" : "default"}
+                  className="flex-1"
+                  onClick={onMessage}
+                  data-testid={`button-message-${service.id}`}
+                >
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  Send Message
+                </Button>
+              )}
+            </>
           )}
         </div>
       </div>

@@ -176,36 +176,9 @@ export default function ServicesPage() {
           />
         </div>
 
-        {/* TouchCare Services Section */}
-        {filteredTouchcareServices.length > 0 && (
-          <div className="mb-12">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="flex-1">
-                <h2 className="font-display font-bold text-2xl">TouchCare Services</h2>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Core navigation and advocacy services included with your membership
-                </p>
-              </div>
-              <Badge variant="default" className="text-sm px-3 py-1">
-                Included
-              </Badge>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {filteredTouchcareServices.map((service) => (
-                <ServiceCard
-                  key={service.id}
-                  service={service}
-                  onCall={() => {}}
-                  onMessage={() => {}}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Premium Services Section */}
         {filteredPremiumServices.length > 0 && (
-          <div>
+          <div className="mb-12">
             <div className="flex items-center gap-3 mb-6">
               <div className="flex-1">
                 <h2 className="font-display font-bold text-2xl">Premium Services</h2>
@@ -220,6 +193,33 @@ export default function ServicesPage() {
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {filteredPremiumServices.map((service) => (
+                <ServiceCard
+                  key={service.id}
+                  service={service}
+                  onCall={() => {}}
+                  onMessage={() => {}}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TouchCare Services Section */}
+        {filteredTouchcareServices.length > 0 && (
+          <div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex-1">
+                <h2 className="font-display font-bold text-2xl">TouchCare Services</h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Core navigation and advocacy services included with your membership
+                </p>
+              </div>
+              <Badge variant="default" className="text-sm px-3 py-1">
+                Included
+              </Badge>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {filteredTouchcareServices.map((service) => (
                 <ServiceCard
                   key={service.id}
                   service={service}

@@ -47,15 +47,46 @@ export default function SettingsPage() {
                     <Input id="lastName" defaultValue="Doe" data-testid="input-last-name" />
                   </div>
                 </div>
-                
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="dateOfBirth">Date of Birth</Label>
+                    <Input id="dateOfBirth" type="date" defaultValue="1985-01-15" data-testid="input-dob" />
+                  </div>
+                  <div>
+                    <Label htmlFor="gender">Gender</Label>
+                    <Input id="gender" defaultValue="Male" data-testid="input-gender" />
+                  </div>
+                </div>
+
                 <div>
                   <Label htmlFor="email">Email</Label>
                   <Input id="email" type="email" defaultValue="john.doe@example.com" data-testid="input-email" />
                 </div>
-                
+
                 <div>
                   <Label htmlFor="phone">Phone</Label>
                   <Input id="phone" type="tel" defaultValue="(555) 123-4567" data-testid="input-phone" />
+                </div>
+
+                <div>
+                  <Label htmlFor="address">Address</Label>
+                  <Input id="address" defaultValue="123 Main St" data-testid="input-address" />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="city">City</Label>
+                    <Input id="city" defaultValue="New York" data-testid="input-city" />
+                  </div>
+                  <div>
+                    <Label htmlFor="state">State</Label>
+                    <Input id="state" defaultValue="NY" data-testid="input-state" />
+                  </div>
+                  <div>
+                    <Label htmlFor="zipCode">Zip Code</Label>
+                    <Input id="zipCode" defaultValue="10001" data-testid="input-zip" />
+                  </div>
                 </div>
 
                 <Button data-testid="button-save-profile">Save Changes</Button>

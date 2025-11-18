@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
+import { motion } from "framer-motion";
 import { TaskBar, type Task } from "@/components/TaskBar";
 import { CaseCard, type Case } from "@/components/CaseCard";
 import { NotificationItem, type Notification } from "@/components/NotificationItem";
@@ -13,6 +14,31 @@ import {
   FileText,
   ChevronRight
 } from "lucide-react";
+
+// Animation variants for staggered entry
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 12
+    }
+  }
+};
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
@@ -135,38 +161,49 @@ export default function Dashboard() {
         </Card>
 
         {/* Quick Actions - Center Top */}
-        <div className="mb-6">
+        <motion.div
+          className="mb-6"
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
           <h2 className="font-display font-bold text-xl mb-4">Quick Actions</h2>
           <div className="grid grid-cols-3 gap-3">
-            <Button
-              variant="outline"
-              className="h-24 flex flex-col gap-2"
-              data-testid="button-quick-schedule"
-              onClick={() => setLocation("/schedule")}
-            >
-              <Calendar className="h-6 w-6" />
-              <span className="text-sm">Schedule</span>
-            </Button>
-            <Button
-              variant="outline"
-              className="h-24 flex flex-col gap-2"
-              data-testid="button-quick-documents"
-              onClick={() => setLocation("/documents")}
-            >
-              <FileText className="h-6 w-6" />
-              <span className="text-sm">Documents</span>
-            </Button>
-            <Button
-              variant="outline"
-              className="h-24 flex flex-col gap-2"
-              data-testid="button-quick-message"
-              onClick={() => setShowNewCaseModal(true)}
-            >
-              <MessageCircle className="h-6 w-6" />
-              <span className="text-sm">Message Us</span>
-            </Button>
+            <motion.div variants={itemVariants}>
+              <Button
+                variant="outline"
+                className="h-24 flex flex-col gap-2 w-full"
+                data-testid="button-quick-schedule"
+                onClick={() => setLocation("/schedule")}
+              >
+                <Calendar className="h-6 w-6" />
+                <span className="text-sm">Schedule</span>
+              </Button>
+            </motion.div>
+            <motion.div variants={itemVariants}>
+              <Button
+                variant="outline"
+                className="h-24 flex flex-col gap-2 w-full"
+                data-testid="button-quick-documents"
+                onClick={() => setLocation("/documents")}
+              >
+                <FileText className="h-6 w-6" />
+                <span className="text-sm">Documents</span>
+              </Button>
+            </motion.div>
+            <motion.div variants={itemVariants}>
+              <Button
+                variant="outline"
+                className="h-24 flex flex-col gap-2 w-full"
+                data-testid="button-quick-message"
+                onClick={() => setShowNewCaseModal(true)}
+              >
+                <MessageCircle className="h-6 w-6" />
+                <span className="text-sm">Message Us</span>
+              </Button>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
@@ -202,15 +239,21 @@ export default function Dashboard() {
                 </Button>
               </div>
 
-              <div className="space-y-3">
+              <motion.div
+                className="space-y-3"
+                initial="hidden"
+                animate="visible"
+                variants={containerVariants}
+              >
                 {mockCases.map((case_) => (
-                  <CaseCard
-                    key={case_.id}
-                    case_={case_}
-                    onClick={() => setLocation(`/cases/${case_.id}`)}
-                  />
+                  <motion.div key={case_.id} variants={itemVariants}>
+                    <CaseCard
+                      case_={case_}
+                      onClick={() => setLocation(`/cases/${case_.id}`)}
+                    />
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
 
               <Button
                 variant="outline"
@@ -224,9 +267,14 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <motion.div
+            className="space-y-6"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+          >
             {/* Notifications - Moved to Right Side */}
-            <div>
+            <motion.div variants={itemVariants}>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-display font-bold text-xl">Notifications</h2>
                 <Button
@@ -254,10 +302,10 @@ export default function Dashboard() {
                   ))}
                 </div>
               </Card>
-            </div>
+            </motion.div>
 
             {/* Upcoming Appointment */}
-            <div>
+            <motion.div variants={itemVariants}>
               <h2 className="font-display font-bold text-xl mb-4">Upcoming Appointment</h2>
               <AppointmentCard
                 appointment={mockAppointment}
@@ -269,8 +317,8 @@ export default function Dashboard() {
                   alert("Adding appointment to calendar...");
                 }}
               />
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
 

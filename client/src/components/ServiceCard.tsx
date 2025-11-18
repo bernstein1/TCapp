@@ -2,7 +2,7 @@ import { Phone, MessageCircle, ExternalLink, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "wouter";
 
 export type ServiceType = "partner" | "internal";
 export type AccessMethod = "call" | "message" | "both";
@@ -25,7 +25,7 @@ type ServiceCardProps = {
 };
 
 export function ServiceCard({ service, onCall, onMessage }: ServiceCardProps) {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const showCall = service.accessMethod === "call" || service.accessMethod === "both";
   const showMessage = service.accessMethod === "message" || service.accessMethod === "both";
 
@@ -82,7 +82,7 @@ export function ServiceCard({ service, onCall, onMessage }: ServiceCardProps) {
           {service.type === "internal" ? (
             <Button
               className="flex-1"
-              onClick={() => navigate("/schedule")}
+              onClick={() => setLocation("/schedule")}
               data-testid={`button-schedule-${service.id}`}
             >
               <Calendar className="h-4 w-4 mr-2" />

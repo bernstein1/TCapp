@@ -1,11 +1,37 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
+import { motion } from "framer-motion";
 import { CaseCard, type Case } from "@/components/CaseCard";
 import { NewCaseModal } from "@/components/NewCaseModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, MessageCircle, Filter } from "lucide-react";
+
+// Animation variants for staggered entry
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 12
+    }
+  }
+};
 
 export default function CasesPage() {
   const [, setLocation] = useLocation();
@@ -104,54 +130,94 @@ export default function CasesPage() {
             <TabsTrigger value="resolved" data-testid="tab-resolved">Resolved</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="all" className="space-y-3">
-            {mockCases.map((case_) => (
-              <CaseCard
-                key={case_.id}
-                case_={case_}
-                onClick={() => setLocation(`/cases/${case_.id}`)}
-              />
-            ))}
+          <TabsContent value="all">
+            <motion.div
+              className="space-y-3"
+              initial="hidden"
+              animate="visible"
+              variants={containerVariants}
+            >
+              {mockCases.map((case_) => (
+                <motion.div key={case_.id} variants={itemVariants}>
+                  <CaseCard
+                    case_={case_}
+                    onClick={() => setLocation(`/cases/${case_.id}`)}
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
           </TabsContent>
 
-          <TabsContent value="open" className="space-y-3">
-            {filterByStatus("open").map((case_) => (
-              <CaseCard
-                key={case_.id}
-                case_={case_}
-                onClick={() => setLocation(`/cases/${case_.id}`)}
-              />
-            ))}
+          <TabsContent value="open">
+            <motion.div
+              className="space-y-3"
+              initial="hidden"
+              animate="visible"
+              variants={containerVariants}
+            >
+              {filterByStatus("open").map((case_) => (
+                <motion.div key={case_.id} variants={itemVariants}>
+                  <CaseCard
+                    case_={case_}
+                    onClick={() => setLocation(`/cases/${case_.id}`)}
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
           </TabsContent>
 
-          <TabsContent value="in_progress" className="space-y-3">
-            {filterByStatus("in_progress").map((case_) => (
-              <CaseCard
-                key={case_.id}
-                case_={case_}
-                onClick={() => setLocation(`/cases/${case_.id}`)}
-              />
-            ))}
+          <TabsContent value="in_progress">
+            <motion.div
+              className="space-y-3"
+              initial="hidden"
+              animate="visible"
+              variants={containerVariants}
+            >
+              {filterByStatus("in_progress").map((case_) => (
+                <motion.div key={case_.id} variants={itemVariants}>
+                  <CaseCard
+                    case_={case_}
+                    onClick={() => setLocation(`/cases/${case_.id}`)}
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
           </TabsContent>
 
-          <TabsContent value="waiting_on_you" className="space-y-3">
-            {filterByStatus("waiting_on_you").map((case_) => (
-              <CaseCard
-                key={case_.id}
-                case_={case_}
-                onClick={() => setLocation(`/cases/${case_.id}`)}
-              />
-            ))}
+          <TabsContent value="waiting_on_you">
+            <motion.div
+              className="space-y-3"
+              initial="hidden"
+              animate="visible"
+              variants={containerVariants}
+            >
+              {filterByStatus("waiting_on_you").map((case_) => (
+                <motion.div key={case_.id} variants={itemVariants}>
+                  <CaseCard
+                    case_={case_}
+                    onClick={() => setLocation(`/cases/${case_.id}`)}
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
           </TabsContent>
 
-          <TabsContent value="resolved" className="space-y-3">
-            {filterByStatus("resolved").map((case_) => (
-              <CaseCard
-                key={case_.id}
-                case_={case_}
-                onClick={() => setLocation(`/cases/${case_.id}`)}
-              />
-            ))}
+          <TabsContent value="resolved">
+            <motion.div
+              className="space-y-3"
+              initial="hidden"
+              animate="visible"
+              variants={containerVariants}
+            >
+              {filterByStatus("resolved").map((case_) => (
+                <motion.div key={case_.id} variants={itemVariants}>
+                  <CaseCard
+                    case_={case_}
+                    onClick={() => setLocation(`/cases/${case_.id}`)}
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
           </TabsContent>
         </Tabs>
 

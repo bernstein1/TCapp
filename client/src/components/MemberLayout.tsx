@@ -48,9 +48,9 @@ export function MemberLayout({ children }: MemberLayoutProps) {
   const [showNewCaseModal, setShowNewCaseModal] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-950">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:border-r lg:bg-sidebar">
+      <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:border-r glass-sidebar">
         <div className="p-6 border-b space-y-3">
           <div className="flex items-center gap-3">
             <img
@@ -117,7 +117,7 @@ export function MemberLayout({ children }: MemberLayoutProps) {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Mobile Header */}
-        <header className="lg:hidden flex items-center justify-between p-4 border-b bg-background">
+        <header className="lg:hidden flex items-center justify-between p-4 border-b glass-header">
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -199,7 +199,7 @@ export function MemberLayout({ children }: MemberLayoutProps) {
         </main>
 
         {/* Mobile Bottom Navigation */}
-        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-background border-t">
+        <nav className="lg:hidden fixed bottom-0 left-0 right-0 glass-mobile-nav border-t">
           <div className="flex items-center justify-around px-2 py-2">
             {navigation.slice(0, 5).map((item) => {
               const Icon = item.icon;

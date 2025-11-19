@@ -22,6 +22,7 @@ const buttonVariants = cva(
         secondary: "border bg-secondary text-secondary-foreground border border-secondary-border ",
         // Add a transparent border so that when someone toggles a border on later, it doesn't shift layout/size.
         ghost: "border border-transparent",
+        link: "text-primary underline-offset-4 hover:underline",
       },
       // Heights are set as "min" heights, because sometimes Ai will place large amount of content
       // inside buttons. With a min-height they will look appropriate with small amounts of content,
@@ -42,7 +43,7 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  VariantProps<typeof buttonVariants> {
   asChild?: boolean
   loading?: boolean
 }
@@ -55,10 +56,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         disabled={disabled || loading}
+        aria-busy={loading}
+        aria-live={loading ? "polite" : undefined}
         {...props}
       >
         {loading && (
-          <Loader2 className="size-4 animate-spin motion-reduce:animate-none" />
+          <>
+            <Loader2 className="size-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
+            <span className="sr-only">Loading...</span>
+          </>
         )}
         {children}
       </Comp>

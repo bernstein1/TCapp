@@ -205,7 +205,9 @@ export function calculateFSA(inputs: FSAInputs): FSAResults {
         numberOfPaychecks = 12;
         break;
     }
-    perPaycheckDeduction = cappedHealthElection / numberOfPaychecks;
+    if (numberOfPaychecks) {
+      perPaycheckDeduction = cappedHealthElection / numberOfPaychecks;
+    }
   }
 
   // Calculate LPFSA (Limited Purpose FSA) results

@@ -17,7 +17,7 @@ type Document = {
   name: string;
   type: DocumentType;
   uploadDate: Date;
-  size: string;
+  fileSize?: string;
   pinned?: boolean;
   isNew?: boolean;
 };
@@ -64,7 +64,7 @@ export function DocumentViewerModal({ open, onClose, document }: DocumentViewerM
                   {format(document.uploadDate, "MMM d, yyyy")}
                 </span>
                 <span className="text-sm text-muted-foreground">•</span>
-                <span className="text-sm text-muted-foreground">{document.size}</span>
+                <span className="text-sm text-muted-foreground">{document.fileSize}</span>
                 {document.isNew && (
                   <Badge variant="default">New</Badge>
                 )}
@@ -158,7 +158,7 @@ export function DocumentViewerModal({ open, onClose, document }: DocumentViewerM
         <div className="flex items-center justify-end gap-2 flex-shrink-0">
           <Button
             variant="outline"
-            onClick={() => {}}
+            onClick={() => { }}
             data-testid="button-download-document"
           >
             <Download className="h-4 w-4 mr-2" />
@@ -166,7 +166,7 @@ export function DocumentViewerModal({ open, onClose, document }: DocumentViewerM
           </Button>
           <Button
             variant="outline"
-            onClick={() => {}}
+            onClick={() => { }}
             data-testid="button-share-document"
           >
             <Share2 className="h-4 w-4 mr-2" />

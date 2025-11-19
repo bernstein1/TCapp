@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useLocation } from "wouter";
 import {
   Dialog,
@@ -62,6 +62,7 @@ type FormData = {
   category: CaseCategory;
   requestFor: "self" | "dependent";
   dependentName: string;
+  briefDescription: string;
   location: string;
   useCustomLocation: boolean;
   customLocation: string;
@@ -152,6 +153,7 @@ export function NewCaseModal({ open, onClose }: NewCaseModalProps) {
     category: "",
     requestFor: "self",
     dependentName: "",
+    briefDescription: "",
     location: "123 Main St, New York, NY 10001",
     useCustomLocation: false,
     customLocation: "",
@@ -208,6 +210,8 @@ export function NewCaseModal({ open, onClose }: NewCaseModalProps) {
     additionalNotes: "",
   });
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   // Get total pages for current category
   const getTotalPages = () => {
     switch (formData.category) {
@@ -234,6 +238,7 @@ export function NewCaseModal({ open, onClose }: NewCaseModalProps) {
     setFormData({ ...formData, category });
     setCurrentPage(0);
     setStep("details");
+    setErrors({});
   };
 
   const handleBack = () => {
@@ -245,15 +250,41 @@ export function NewCaseModal({ open, onClose }: NewCaseModalProps) {
       setStep("details");
       setCurrentPage(getTotalPages() - 1);
     }
+    setErrors({});
   };
 
   const handleNext = () => {
     const totalPages = getTotalPages();
+
+    // Validate brief description on first page
+    if (step === "details" && currentPage === 0) {
+      if (!formData.briefDescription.trim()) {
+        setErrors({ briefDescription: "Please briefly describe your request" });
+        return;
+      }
+    }
+
     if (step === "details" && currentPage < totalPages - 1) {
       setCurrentPage(currentPage + 1);
+      setErrors({});
     } else if (step === "details" && currentPage === totalPages - 1) {
       setStep("review");
+    } else if (step === "review") {
+      // Validate contact method before submission (if this was submit)
+      // But handleNext usually goes to review. Submit is separate.
+      // Wait, handleNext handles transition to review.
+      // Validation for contact method should happen when trying to submit?
+      // Or is contact method on the last page?
+      // CommunicationPreferences is usually the last page.
     }
+  };
+
+  const validateContactMethod = () => {
+    if (formData.contactMethod.length === 0) {
+      setErrors({ contactMethod: "Please select at least one contact method" });
+      return false;
+    }
+    return true;
   };
 
   const handleSkip = () => {
@@ -261,6 +292,10 @@ export function NewCaseModal({ open, onClose }: NewCaseModalProps) {
   };
 
   const handleSubmit = () => {
+    if (!validateContactMethod()) {
+      return;
+    }
+
     // Simulate case creation
     const newCaseId = `case-${Date.now()}`;
     setStep("confirmation");
@@ -569,17 +604,41 @@ function ReviewSection({ title, children }: { title: string; children: React.Rea
 function UniversalFields({
   formData,
   updateField,
+  errors,
 }: {
   formData: FormData;
   updateField: (field: keyof FormData, value: any) => void;
+  errors?: Record<string, string>;
 }) {
   return (
     <div className="space-y-4">
       <div>
+        <Label htmlFor="brief-description" className="text-base font-semibold">
+          Briefly describe your request *
+        </Label>
+        <Input
+          id="brief-description"
+          placeholder="E.g., I need a new primary care doctor"
+          value={formData.briefDescription}
+          onChange={(e) => updateField("briefDescription", e.target.value)}
+          className={`mt-2 ${errors?.briefDescription ? "border-red-500" : ""}`}
+          required
+          aria-required="true"
+          aria-describedby={errors?.briefDescription ? "brief-description-error" : undefined}
+          aria-invalid={!!errors?.briefDescription}
+        />
+        {errors?.briefDescription && (
+          <p id="brief-description-error" className="text-sm text-red-500 mt-1" role="alert">
+            {errors.briefDescription}
+          </p>
+        )}
+      </div>
+
+      <div>
         <Label className="text-base font-semibold">This request is for: *</Label>
         <RadioGroup
           value={formData.requestFor}
-          onValueChange={(value) => updateField("requestFor", value)}
+          onValueChange={(value) => updateField("requestFor", value as "self" | "dependent")}
           className="mt-2"
         >
           <div className="flex items-center space-x-2">
@@ -614,7 +673,24 @@ function UniversalFields({
           </div>
         )}
       </div>
+    </div>
+  );
+}
 
+
+
+function ProviderFieldsPage1({
+  formData,
+  updateField,
+  toggleArrayField,
+}: {
+  formData: FormData;
+  updateField: (field: keyof FormData, value: any) => void;
+  toggleArrayField: (field: keyof FormData, value: string) => void;
+}) {
+  return (
+    <div className="space-y-4">
+      {/* Service Location */}
       <div>
         <Label htmlFor="location" className="text-base font-semibold">
           Service location
@@ -638,25 +714,34 @@ function UniversalFields({
           </Label>
         </div>
       </div>
-    </div>
-  );
-}
-
-function ProviderFieldsPage1({
-  formData,
-  updateField,
-  toggleArrayField,
-}: {
-  formData: FormData;
-  updateField: (field: keyof FormData, value: any) => void;
-  toggleArrayField: (field: keyof FormData, value: string) => void;
-}) {
-  return (
-    <div className="space-y-4">
+      {/* Service Location */}
+      <div>
+        <Label htmlFor="location" className="text-base font-semibold">
+          Service location
+        </Label>
+        <Input
+          id="location"
+          value={formData.useCustomLocation ? formData.customLocation : formData.location}
+          onChange={(e) =>
+            updateField(formData.useCustomLocation ? "customLocation" : "location", e.target.value)
+          }
+          className="mt-2"
+        />
+        <div className="flex items-center space-x-2 mt-2">
+          <Checkbox
+            id="custom-location"
+            checked={formData.useCustomLocation}
+            onCheckedChange={(checked) => updateField("useCustomLocation", checked)}
+          />
+          <Label htmlFor="custom-location" className="font-normal cursor-pointer text-sm">
+            Use different address
+          </Label>
+        </div>
+      </div>
       <h3 className="font-semibold text-lg">Provider Search Details</h3>
 
       <div>
-        <Label htmlFor="care-type">What type of care do you need? *</Label>
+        <Label htmlFor="care-type">What type of care do you need?</Label>
         <Textarea
           id="care-type"
           placeholder="Example: annual physical, specialist consultation, urgent care"
@@ -769,6 +854,30 @@ function BillingFieldsPage1({
 }) {
   return (
     <div className="space-y-4">
+      {/* Service Location */}
+      <div>
+        <Label htmlFor="location" className="text-base font-semibold">
+          Service location
+        </Label>
+        <Input
+          id="location"
+          value={formData.useCustomLocation ? formData.customLocation : formData.location}
+          onChange={(e) =>
+            updateField(formData.useCustomLocation ? "customLocation" : "location", e.target.value)
+          }
+          className="mt-2"
+        />
+        <div className="flex items-center space-x-2 mt-2">
+          <Checkbox
+            id="custom-location"
+            checked={formData.useCustomLocation}
+            onCheckedChange={(checked) => updateField("useCustomLocation", checked)}
+          />
+          <Label htmlFor="custom-location" className="font-normal cursor-pointer text-sm">
+            Use different address
+          </Label>
+        </div>
+      </div>
       <h3 className="font-semibold text-lg">Billing Details</h3>
 
       <div>
@@ -941,6 +1050,54 @@ function MedicationFieldsPage1({
 }) {
   return (
     <div className="space-y-4">
+      {/* Service Location */}
+      <div>
+        <Label htmlFor="location" className="text-base font-semibold">
+          Service location
+        </Label>
+        <Input
+          id="location"
+          value={formData.useCustomLocation ? formData.customLocation : formData.location}
+          onChange={(e) =>
+            updateField(formData.useCustomLocation ? "customLocation" : "location", e.target.value)
+          }
+          className="mt-2"
+        />
+        <div className="flex items-center space-x-2 mt-2">
+          <Checkbox
+            id="custom-location"
+            checked={formData.useCustomLocation}
+            onCheckedChange={(checked) => updateField("useCustomLocation", checked)}
+          />
+          <Label htmlFor="custom-location" className="font-normal cursor-pointer text-sm">
+            Use different address
+          </Label>
+        </div>
+      </div>
+      {/* Service Location */}
+      <div>
+        <Label htmlFor="location" className="text-base font-semibold">
+          Service location
+        </Label>
+        <Input
+          id="location"
+          value={formData.useCustomLocation ? formData.customLocation : formData.location}
+          onChange={(e) =>
+            updateField(formData.useCustomLocation ? "customLocation" : "location", e.target.value)
+          }
+          className="mt-2"
+        />
+        <div className="flex items-center space-x-2 mt-2">
+          <Checkbox
+            id="custom-location"
+            checked={formData.useCustomLocation}
+            onCheckedChange={(checked) => updateField("useCustomLocation", checked)}
+          />
+          <Label htmlFor="custom-location" className="font-normal cursor-pointer text-sm">
+            Use different address
+          </Label>
+        </div>
+      </div>
       <h3 className="font-semibold text-lg">Medication Details</h3>
 
       <div>
@@ -1077,6 +1234,30 @@ function ServiceFieldsPage1({
 }) {
   return (
     <div className="space-y-4">
+      {/* Service Location */}
+      <div>
+        <Label htmlFor="location" className="text-base font-semibold">
+          Service location
+        </Label>
+        <Input
+          id="location"
+          value={formData.useCustomLocation ? formData.customLocation : formData.location}
+          onChange={(e) =>
+            updateField(formData.useCustomLocation ? "customLocation" : "location", e.target.value)
+          }
+          className="mt-2"
+        />
+        <div className="flex items-center space-x-2 mt-2">
+          <Checkbox
+            id="custom-location"
+            checked={formData.useCustomLocation}
+            onCheckedChange={(checked) => updateField("useCustomLocation", checked)}
+          />
+          <Label htmlFor="custom-location" className="font-normal cursor-pointer text-sm">
+            Use different address
+          </Label>
+        </div>
+      </div>
       <h3 className="font-semibold text-lg">Service/Procedure Details</h3>
 
       <div>
@@ -1227,6 +1408,30 @@ function PlanFieldsPage1({
 }) {
   return (
     <div className="space-y-4">
+      {/* Service Location */}
+      <div>
+        <Label htmlFor="location" className="text-base font-semibold">
+          Service location
+        </Label>
+        <Input
+          id="location"
+          value={formData.useCustomLocation ? formData.customLocation : formData.location}
+          onChange={(e) =>
+            updateField(formData.useCustomLocation ? "customLocation" : "location", e.target.value)
+          }
+          className="mt-2"
+        />
+        <div className="flex items-center space-x-2 mt-2">
+          <Checkbox
+            id="custom-location"
+            checked={formData.useCustomLocation}
+            onCheckedChange={(checked) => updateField("useCustomLocation", checked)}
+          />
+          <Label htmlFor="custom-location" className="font-normal cursor-pointer text-sm">
+            Use different address
+          </Label>
+        </div>
+      </div>
       <h3 className="font-semibold text-lg">Plan Selection Assistance</h3>
 
       <div>
@@ -1386,7 +1591,7 @@ function ProviderFields({
       <h3 className="font-semibold text-lg">Provider Search Details</h3>
 
       <div>
-        <Label htmlFor="care-type">What type of care do you need? *</Label>
+        <Label htmlFor="care-type">What type of care do you need?</Label>
         <Textarea
           id="care-type"
           placeholder="Example: annual physical, specialist consultation, urgent care"
@@ -1899,6 +2104,30 @@ function BenefitsFields({
 }) {
   return (
     <div className="space-y-4 border-t pt-4">
+      {/* Service Location */}
+      <div>
+        <Label htmlFor="location" className="text-base font-semibold">
+          Service location
+        </Label>
+        <Input
+          id="location"
+          value={formData.useCustomLocation ? formData.customLocation : formData.location}
+          onChange={(e) =>
+            updateField(formData.useCustomLocation ? "customLocation" : "location", e.target.value)
+          }
+          className="mt-2"
+        />
+        <div className="flex items-center space-x-2 mt-2">
+          <Checkbox
+            id="custom-location"
+            checked={formData.useCustomLocation}
+            onCheckedChange={(checked) => updateField("useCustomLocation", checked)}
+          />
+          <Label htmlFor="custom-location" className="font-normal cursor-pointer text-sm">
+            Use different address
+          </Label>
+        </div>
+      </div>
       <h3 className="font-semibold text-lg">Benefits Question</h3>
 
       <div>
@@ -2119,10 +2348,34 @@ function QuestionFields({
 }) {
   return (
     <div className="space-y-4 border-t pt-4">
+      {/* Service Location */}
+      <div>
+        <Label htmlFor="location" className="text-base font-semibold">
+          Service location
+        </Label>
+        <Input
+          id="location"
+          value={formData.useCustomLocation ? formData.customLocation : formData.location}
+          onChange={(e) =>
+            updateField(formData.useCustomLocation ? "customLocation" : "location", e.target.value)
+          }
+          className="mt-2"
+        />
+        <div className="flex items-center space-x-2 mt-2">
+          <Checkbox
+            id="custom-location"
+            checked={formData.useCustomLocation}
+            onCheckedChange={(checked) => updateField("useCustomLocation", checked)}
+          />
+          <Label htmlFor="custom-location" className="font-normal cursor-pointer text-sm">
+            Use different address
+          </Label>
+        </div>
+      </div>
       <h3 className="font-semibold text-lg">Your Question</h3>
 
       <div>
-        <Label htmlFor="quick-question">Your Question *</Label>
+        <Label htmlFor="quick-question">What is your question?</Label>
         <Textarea
           id="quick-question"
           placeholder="Please provide as much detail as possible"
@@ -2158,26 +2411,29 @@ function CommunicationPreferences({
   formData,
   updateField,
   toggleArrayField,
+  errors,
 }: {
   formData: FormData;
   updateField: (field: keyof FormData, value: any) => void;
   toggleArrayField: (field: keyof FormData, value: string) => void;
+  errors?: Record<string, string>;
 }) {
   return (
     <div className="space-y-4 border-t pt-4">
       <h3 className="font-semibold text-lg">Communication Preferences</h3>
 
-      <div>
-        <Label>How would you prefer we contact you? *</Label>
-        <div className="space-y-2 mt-2">
+      <fieldset>
+        <legend className="text-base font-medium mb-2">How would you prefer we contact you? *</legend>
+        <div className="space-y-2 mt-2" aria-describedby={errors?.contactMethod ? "contact-method-error" : undefined}>
           <div className="flex items-center space-x-2">
             <Checkbox
               id="phone"
               checked={formData.contactMethod.includes("phone")}
               onCheckedChange={() => toggleArrayField("contactMethod", "phone")}
+              aria-invalid={!!errors?.contactMethod}
             />
             <Label htmlFor="phone" className="font-normal cursor-pointer flex items-center gap-2">
-              <Phone className="h-4 w-4" />
+              <Phone className="h-4 w-4" aria-hidden="true" />
               Phone call (555-123-4567)
             </Label>
           </div>
@@ -2186,9 +2442,10 @@ function CommunicationPreferences({
               id="portal"
               checked={formData.contactMethod.includes("portal")}
               onCheckedChange={() => toggleArrayField("contactMethod", "portal")}
+              aria-invalid={!!errors?.contactMethod}
             />
             <Label htmlFor="portal" className="font-normal cursor-pointer flex items-center gap-2">
-              <MessageSquare className="h-4 w-4" />
+              <MessageSquare className="h-4 w-4" aria-hidden="true" />
               TouchCare portal message
             </Label>
           </div>
@@ -2201,14 +2458,19 @@ function CommunicationPreferences({
                   checked={formData.leaveVoicemail}
                   onCheckedChange={(checked) => updateField("leaveVoicemail", checked)}
                 />
-                <Label htmlFor="voicemail" className="font-normal cursor-pointer text-sm">
+                <Label htmlFor="voicemail" className="font-normal cursor-pointer  text-sm">
                   Okay to leave detailed voicemail
                 </Label>
               </div>
             </div>
           )}
         </div>
-      </div>
+        {errors?.contactMethod && (
+          <p id="contact-method-error" className="text-sm text-red-500 mt-1" role="alert">
+            {errors.contactMethod}
+          </p>
+        )}
+      </fieldset>
 
       <div>
         <Label>Best time to reach you (optional)</Label>

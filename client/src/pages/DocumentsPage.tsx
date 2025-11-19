@@ -30,7 +30,7 @@ export default function DocumentsPage() {
       name: "Medical Insurance Card",
       type: "insurance_card",
       uploadDate: new Date(2024, 0, 15),
-      size: "245 KB",
+      fileSize: "245 KB",
       pinned: true,
     },
     {
@@ -38,7 +38,7 @@ export default function DocumentsPage() {
       name: "Dental Insurance Card",
       type: "insurance_card",
       uploadDate: new Date(2024, 0, 15),
-      size: "198 KB",
+      fileSize: "198 KB",
       pinned: true,
     },
     {
@@ -46,7 +46,7 @@ export default function DocumentsPage() {
       name: "EOB - Dr. Smith Office Visit",
       type: "eob",
       uploadDate: new Date(2024, 10, 1),
-      size: "1.2 MB",
+      fileSize: "1.2 MB",
       isNew: true,
     },
     {
@@ -54,21 +54,21 @@ export default function DocumentsPage() {
       name: "Claim #45678 - Radiology",
       type: "claim",
       uploadDate: new Date(2024, 9, 20),
-      size: "856 KB",
+      fileSize: "856 KB",
     },
     {
       id: "5",
       name: "2024 Benefits Summary",
       type: "policy",
       uploadDate: new Date(2023, 11, 1),
-      size: "2.4 MB",
+      fileSize: "2.4 MB",
     },
     {
       id: "6",
       name: "Coverage Letter - Specialist",
       type: "letter",
       uploadDate: new Date(2024, 8, 15),
-      size: "412 KB",
+      fileSize: "412 KB",
     },
   ];
 
@@ -191,8 +191,8 @@ export default function DocumentsPage() {
                       key={doc.id}
                       document={doc}
                       onView={() => setSelectedDocument(doc)}
-                      onDownload={() => {}}
-                      onShare={() => {}}
+                      onDownload={() => { }}
+                      onShare={() => { }}
                     />
                   ))}
                 </div>
@@ -205,8 +205,8 @@ export default function DocumentsPage() {
                       key={doc.id}
                       document={doc}
                       onView={() => setSelectedDocument(doc)}
-                      onDownload={() => {}}
-                      onShare={() => {}}
+                      onDownload={() => { }}
+                      onShare={() => { }}
                     />
                   ))}
                 </div>
@@ -219,8 +219,8 @@ export default function DocumentsPage() {
                       key={doc.id}
                       document={doc}
                       onView={() => setSelectedDocument(doc)}
-                      onDownload={() => {}}
-                      onShare={() => {}}
+                      onDownload={() => { }}
+                      onShare={() => { }}
                     />
                   ))}
                 </div>
@@ -233,8 +233,8 @@ export default function DocumentsPage() {
                       key={doc.id}
                       document={doc}
                       onView={() => setSelectedDocument(doc)}
-                      onDownload={() => {}}
-                      onShare={() => {}}
+                      onDownload={() => { }}
+                      onShare={() => { }}
                     />
                   ))}
                 </div>
@@ -247,8 +247,8 @@ export default function DocumentsPage() {
                       key={doc.id}
                       document={doc}
                       onView={() => setSelectedDocument(doc)}
-                      onDownload={() => {}}
-                      onShare={() => {}}
+                      onDownload={() => { }}
+                      onShare={() => { }}
                     />
                   ))}
                 </div>
@@ -336,9 +336,8 @@ export default function DocumentsPage() {
                     {chatMessages.map((message) => (
                       <div
                         key={message.id}
-                        className={`flex gap-4 ${
-                          message.role === "user" ? "justify-end" : "justify-start"
-                        }`}
+                        className={`flex gap-4 ${message.role === "user" ? "justify-end" : "justify-start"
+                          }`}
                       >
                         {message.role === "assistant" && (
                           <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -346,11 +345,10 @@ export default function DocumentsPage() {
                           </div>
                         )}
                         <div
-                          className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                            message.role === "user"
+                          className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.role === "user"
                               ? "bg-primary text-primary-foreground"
                               : "bg-muted"
-                          }`}
+                            }`}
                         >
                           <p className="text-sm leading-relaxed">{message.content}</p>
                         </div>

@@ -156,8 +156,8 @@ export default function Dashboard() {
                 data-testid="button-hero-new-case"
                 onClick={() => setShowNewCaseModal(true)}
               >
-                <MessageCircle className="mr-2 h-5 w-5" />
-                Start New Case
+                <MessageCircle className="mr-2 h-5 w-5" aria-hidden="true" />
+                New Case
               </Button>
             </div>
           </div>
@@ -179,7 +179,7 @@ export default function Dashboard() {
                 data-testid="button-quick-schedule"
                 onClick={() => setLocation("/schedule")}
               >
-                <Calendar className="h-6 w-6" />
+                <Calendar className="h-8 w-8" aria-hidden="true" />
                 <span className="text-sm">Schedule</span>
               </Button>
             </motion.div>
@@ -190,7 +190,7 @@ export default function Dashboard() {
                 data-testid="button-quick-documents"
                 onClick={() => setLocation("/documents")}
               >
-                <FileText className="h-6 w-6" />
+                <FileText className="h-8 w-8" aria-hidden="true" />
                 <span className="text-sm">Documents</span>
               </Button>
             </motion.div>
@@ -201,7 +201,7 @@ export default function Dashboard() {
                 data-testid="button-quick-message"
                 onClick={() => setShowNewCaseModal(true)}
               >
-                <MessageCircle className="h-6 w-6" />
+                <MessageCircle className="h-8 w-8" aria-hidden="true" />
                 <span className="text-sm">Message Us</span>
               </Button>
             </motion.div>

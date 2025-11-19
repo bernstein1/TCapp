@@ -5,6 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Clock, ExternalLink, BookOpen, Megaphone, Bot, FileText, CheckCircle2 } from "lucide-react";
 import { format } from "date-fns";
 import { useState } from "react";
+import { AIAssistantModal } from "@/components/AIAssistantModal";
+
 
 type Announcement = {
   id: string;
@@ -418,6 +420,14 @@ export default function ResourcesPage() {
             ))}
           </TabsContent>
         </Tabs>
+
+        {/* AI Assistant Modal */}
+        <AIAssistantModal
+          open={showAIAgent}
+          onOpenChange={setShowAIAgent}
+          guides={guides}
+          articles={articles}
+        />
       </div>
     </div>
   );

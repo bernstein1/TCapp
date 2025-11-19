@@ -21,7 +21,7 @@ type TaskBarProps = {
 
 export function TaskBar({ tasks, onTaskToggle, onTaskClick }: TaskBarProps) {
   const [isExpanded, setIsExpanded] = useState(true);
-  
+
   const completedCount = tasks.filter(t => t.completed).length;
   const totalCount = tasks.length;
   const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
@@ -30,24 +30,29 @@ export function TaskBar({ tasks, onTaskToggle, onTaskClick }: TaskBarProps) {
   if (allCompleted) return null;
 
   return (
-    <Card 
-      className="bg-secondary/10 border-secondary/20"
+    <Card
+      className="bg-card border-border shadow-sm"
       data-testid="card-task-bar"
     >
       <div className="p-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex-1">
-            <div className="flex items-center gap-3">
-              <h3 className="font-display font-bold text-lg" data-testid="text-task-title">
-                Complete Your Profile
-              </h3>
-              <span className="text-sm text-muted-foreground" data-testid="text-task-progress">
-                {completedCount} of {totalCount} complete
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-3">
+                <h3 className="font-display font-bold text-lg" data-testid="text-task-title">
+                  Complete Your Profile
+                </h3>
+                <span className="text-sm text-muted-foreground" data-testid="text-task-progress">
+                  {completedCount} of {totalCount} complete
+                </span>
+              </div>
+              <span className="text-sm font-bold text-primary">
+                {Math.round(progress)}%
               </span>
             </div>
-            <Progress 
-              value={progress} 
-              className="mt-2 h-2"
+            <Progress
+              value={progress}
+              className="h-2"
               data-testid="progress-tasks"
             />
           </div>
@@ -56,6 +61,7 @@ export function TaskBar({ tasks, onTaskToggle, onTaskClick }: TaskBarProps) {
             size="icon"
             onClick={() => setIsExpanded(!isExpanded)}
             data-testid="button-task-toggle"
+            className="ml-4"
           >
             {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
           </Button>
@@ -82,7 +88,7 @@ export function TaskBar({ tasks, onTaskToggle, onTaskClick }: TaskBarProps) {
                   data-testid={`button-task-toggle-${task.id}`}
                 >
                   {task.completed ? (
-                    <CheckCircle2 className="h-5 w-5 text-secondary" />
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
                   ) : (
                     <Circle className="h-5 w-5 text-muted-foreground" />
                   )}

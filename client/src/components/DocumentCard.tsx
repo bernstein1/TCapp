@@ -1,8 +1,8 @@
 import { format } from "date-fns";
-import { 
-  FileText, 
-  Download, 
-  Share2, 
+import {
+  FileText,
+  Download,
+  Share2,
   Eye,
   CreditCard,
   FileCheck,
@@ -20,7 +20,7 @@ export type Document = {
   name: string;
   type: DocumentType;
   uploadDate: Date;
-  size?: string;
+  fileSize?: string;
   pinned?: boolean;
   isNew?: boolean;
 };
@@ -62,7 +62,7 @@ export function DocumentCard({
           <div className={`p-3 rounded-lg bg-accent ${config.color} transition-transform duration-300 group-hover:scale-110 motion-reduce:group-hover:scale-100`}>
             <Icon className="h-6 w-6" />
           </div>
-          
+
           <div className="flex-1 min-w-0">
             <div className="flex items-start gap-2">
               <h4 className="font-semibold text-sm truncate flex-1">
@@ -74,16 +74,16 @@ export function DocumentCard({
                 </Badge>
               )}
             </div>
-            
+
             <div className="flex items-center gap-2 mt-1">
               <Badge variant="secondary" className="text-xs">
                 {config.label}
               </Badge>
-              {document.size && (
-                <span className="text-xs text-muted-foreground">{document.size}</span>
+              {document.fileSize && (
+                <span className="text-xs text-muted-foreground">{document.fileSize}</span>
               )}
             </div>
-            
+
             <p className="text-xs text-muted-foreground mt-2">
               {format(document.uploadDate, "MMM d, yyyy")}
             </p>

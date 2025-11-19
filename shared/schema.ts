@@ -49,11 +49,11 @@ export type Member = typeof members.$inferSelect;
 // Dependents table
 export const dependents = pgTable("dependents", {
   id: uuid("id").defaultRandom().primaryKey(),
-  memberId: uuid("member_id").references(() => members.id, { onDelete: "cascade" }).notNull(),
+  memberId: uuid("member_id").notNull().references(() => members.id),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
   relationship: text("relationship").notNull(),
-  dateOfBirth: text("date_of_birth"),
+  dateOfBirth: text("date_of_birth").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -67,12 +67,14 @@ export type Dependent = typeof dependents.$inferSelect;
 // Cases table
 export const cases = pgTable("cases", {
   id: uuid("id").defaultRandom().primaryKey(),
-  memberId: uuid("member_id").references(() => members.id, { onDelete: "cascade" }).notNull(),
-  subject: text("subject").notNull(),
-  status: caseStatusEnum("status").notNull().default("open"),
-  agentName: text("agent_name").notNull(),
-  agentAvatar: text("agent_avatar"),
-  unreadCount: integer("unread_count").notNull().default(0),
+  memberId: uuid("member_id").notNull().references(() => members.id),
+  caseNumber: text("case_number").default("").notNull(), // Added default to avoid issues if not provided in seed (though seed doesn't provide it, maybe it's generated?) Seed doesn't provide caseNumber. I'll make it optional or default.
+  subject: text("subject").notNull(), // Renamed from title
+  description: text("description"), // Made optional as seed doesn't seem to have it? Seed doesn't have description.
+  status: caseStatusEnum("status").default("open").notNull(),
+  category: text("category").default("general").notNull(), // Seed doesn't provide category.
+  agentName: text("agent_name"),
+  unreadCount: integer("unread_count").default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -85,15 +87,15 @@ export const insertCaseSchema = createInsertSchema(cases).omit({
 export type InsertCase = z.infer<typeof insertCaseSchema>;
 export type Case = typeof cases.$inferSelect;
 
-// Case messages table
+// Case Messages table
 export const caseMessages = pgTable("case_messages", {
   id: uuid("id").defaultRandom().primaryKey(),
-  caseId: uuid("case_id").references(() => cases.id, { onDelete: "cascade" }).notNull(),
-  senderId: uuid("sender_id").references(() => members.id).notNull(),
-  senderType: text("sender_type").notNull(),
-  message: text("message").notNull(),
-  delivered: boolean("delivered").notNull().default(false),
-  read: boolean("read").notNull().default(false),
+  caseId: uuid("case_id").notNull().references(() => cases.id),
+  senderId: uuid("sender_id").notNull().references(() => members.id),
+  senderType: text("sender_type").notNull(), // "member" or "agent"
+  message: text("message").notNull(), // Renamed from content? Seed uses message.
+  delivered: boolean("delivered").default(false),
+  read: boolean("read").default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -107,14 +109,14 @@ export type CaseMessage = typeof caseMessages.$inferSelect;
 // Documents table
 export const documents = pgTable("documents", {
   id: uuid("id").defaultRandom().primaryKey(),
-  memberId: uuid("member_id").references(() => members.id, { onDelete: "cascade" }).notNull(),
-  name: text("name").notNull(),
+  memberId: uuid("member_id").notNull().references(() => members.id),
+  name: text("name").notNull(), // Renamed from title
   type: documentTypeEnum("type").notNull(),
-  fileUrl: text("file_url").notNull(),
-  fileSize: text("file_size"),
-  pinned: boolean("pinned").notNull().default(false),
-  isNew: boolean("is_new").notNull().default(true),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  fileUrl: text("file_url").notNull(), // Renamed from url
+  fileSize: text("file_size").notNull(), // Renamed from size
+  pinned: boolean("pinned").default(false),
+  isNew: boolean("is_new").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(), // Renamed from uploadDate
 });
 
 export const insertDocumentSchema = createInsertSchema(documents).omit({
@@ -127,15 +129,16 @@ export type Document = typeof documents.$inferSelect;
 // Appointments table
 export const appointments = pgTable("appointments", {
   id: uuid("id").defaultRandom().primaryKey(),
-  memberId: uuid("member_id").references(() => members.id, { onDelete: "cascade" }).notNull(),
-  type: text("type").notNull(),
-  dateTime: timestamp("date_time").notNull(),
-  duration: integer("duration").notNull(),
-  consultantName: text("consultant_name").notNull(),
+  memberId: uuid("member_id").notNull().references(() => members.id),
+  type: text("type").notNull(), // Renamed from title
+  dateTime: timestamp("date_time").notNull(), // Renamed from date
+  duration: integer("duration").notNull(), // in minutes
   format: appointmentFormatEnum("format").notNull(),
-  joinUrl: text("join_url"),
+  consultantName: text("consultant_name"), // Renamed from providerName
   phoneNumber: text("phone_number"),
-  status: text("status").notNull().default("scheduled"),
+  joinUrl: text("join_url"),
+  status: text("status").default("scheduled"),
+  notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -149,12 +152,12 @@ export type Appointment = typeof appointments.$inferSelect;
 // Notifications table
 export const notifications = pgTable("notifications", {
   id: uuid("id").defaultRandom().primaryKey(),
-  memberId: uuid("member_id").references(() => members.id, { onDelete: "cascade" }).notNull(),
-  type: notificationTypeEnum("type").notNull(),
+  memberId: uuid("member_id").notNull().references(() => members.id),
   title: text("title").notNull(),
   message: text("message").notNull(),
-  read: boolean("read").notNull().default(false),
-  actionUrl: text("action_url"),
+  type: notificationTypeEnum("type").notNull(),
+  read: boolean("read").default(false).notNull(),
+  actionUrl: text("action_url"), // Renamed from link
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -165,23 +168,24 @@ export const insertNotificationSchema = createInsertSchema(notifications).omit({
 export type InsertNotification = z.infer<typeof insertNotificationSchema>;
 export type Notification = typeof notifications.$inferSelect;
 
-// Services table
+// Services table (for marketplace/partners)
 export const services = pgTable("services", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
+  category: text("category").default("general").notNull(), // Seed doesn't provide category? Wait, seed doesn't provide category. I'll make it default.
   type: serviceTypeEnum("type").notNull(),
-  accessMethod: accessMethodEnum("access_method").notNull(),
+  logoUrl: text("logo_url"),
+  actionUrl: text("action_url"),
+  accessMethod: text("access_method"), // Seed uses accessMethod
   phoneNumber: text("phone_number"),
   hours: text("hours"),
-  logo: text("logo"),
-  active: boolean("active").notNull().default(true),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  active: boolean("active").default(true),
+  isPopular: boolean("is_popular").default(false),
 });
 
 export const insertServiceSchema = createInsertSchema(services).omit({
   id: true,
-  createdAt: true,
 });
 export type InsertService = z.infer<typeof insertServiceSchema>;
 export type Service = typeof services.$inferSelect;
@@ -189,12 +193,14 @@ export type Service = typeof services.$inferSelect;
 // Tasks table
 export const tasks = pgTable("tasks", {
   id: uuid("id").defaultRandom().primaryKey(),
-  memberId: uuid("member_id").references(() => members.id, { onDelete: "cascade" }).notNull(),
+  memberId: uuid("member_id").notNull().references(() => members.id),
   title: text("title").notNull(),
-  description: text("description").notNull(),
-  completed: boolean("completed").notNull().default(false),
-  required: boolean("required").notNull().default(false),
-  order: integer("order").notNull(),
+  description: text("description"),
+  completed: boolean("completed").default(false).notNull(),
+  required: boolean("required").default(false),
+  order: integer("order").default(0),
+  dueDate: timestamp("due_date"),
+  actionUrl: text("action_url"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -205,32 +211,154 @@ export const insertTaskSchema = createInsertSchema(tasks).omit({
 export type InsertTask = z.infer<typeof insertTaskSchema>;
 export type Task = typeof tasks.$inferSelect;
 
-// Brand configurations table (for white-label support)
+// Brand Config (for white-labeling)
 export const brandConfigs = pgTable("brand_configs", {
   id: uuid("id").defaultRandom().primaryKey(),
   code: text("code").notNull().unique(),
-  name: text("name").notNull(),
-  colors: json("colors").$type<{
-    primary?: string;
-    secondary?: string;
-    accent?: string;
-    background?: string;
-    foreground?: string;
-  }>().notNull(),
-  logo: text("logo"),
-  fonts: json("fonts").$type<{
-    display?: string;
-    body?: string;
-  }>(),
-  active: boolean("active").notNull().default(true),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  companyName: text("company_name").notNull(),
+  primaryColor: text("primary_color").notNull(),
+  secondaryColor: text("secondary_color").notNull(),
+  logoUrl: text("logo_url").notNull(),
+  faviconUrl: text("favicon_url"),
+  supportEmail: text("support_email").notNull(),
+  supportPhone: text("support_phone").notNull(),
+  active: boolean("active").default(true),
 });
 
 export const insertBrandConfigSchema = createInsertSchema(brandConfigs).omit({
   id: true,
-  createdAt: true,
-  updatedAt: true,
 });
 export type InsertBrandConfig = z.infer<typeof insertBrandConfigSchema>;
 export type BrandConfig = typeof brandConfigs.$inferSelect;
+
+// Calculator Types
+export type FilingStatus = "single" | "marriedJoint" | "marriedSeparate" | "headOfHousehold";
+
+export interface HSAInputs {
+  accountType?: string;
+  hsaMotivation?: string;
+  coverage: 'individual' | 'family';
+  age: number;
+  employeeContribution: number;
+  contribution?: number;
+  hdhpMonthlyPremium: number;
+  altPlanMonthlyPremium: number;
+  employerSeed: number;
+  targetReserve: number;
+  annualIncome: number;
+  filingStatus: FilingStatus;
+  spouseHasHSA: boolean;
+  spouseHSAContribution: number;
+  spouseEmployerHSAContribution?: number;
+  enrolledInMedicare?: boolean;
+  anticipatedMedicalExpenses: number;
+  anticipatedDentalExpenses: number;
+  anticipatedVisionExpenses: number;
+  planDeductibleIndividual: number;
+  planDeductibleFamily: number;
+  monthlyContributionBudget: number;
+  taxBracket?: number;
+  income?: number;
+}
+
+export interface HSAResults {
+  annualContributionLimit: number;
+  catchUpContribution: number;
+  employeeContribution: number;
+  employerContribution: number;
+  totalContribution: number;
+  taxSavings: number;
+  annualPremiumSavings: number;
+  netCashflowAdvantage: number;
+  projectedReserve: number;
+  reserveShortfall: number;
+  marginalRate: number;
+  totalAnticipatedExpenses: number;
+  deductibleCoverageRatio?: number;
+  monthlyBudgetFeasible?: boolean;
+  spousalLimitWarning?: string;
+  warnings?: string[];
+  actualContribution: number;
+  contributionLimit: number;
+  effectiveCost: number;
+  taxableIncome?: number;
+}
+
+export interface FSAInputs {
+  healthElection: number;
+  expectedEligibleExpenses: number;
+  planCarryover: number;
+  gracePeriodMonths: number;
+  includeDependentCare: boolean;
+  dependentCareElection: number;
+  expectedDependentCareExpenses: number;
+  annualIncome: number;
+  filingStatus: FilingStatus;
+  payFrequency: string;
+  includeLimitedPurposeFSA: boolean;
+  lpfsaElection: number;
+  lpfsaExpectedExpenses: number;
+  taxBracket?: number;
+  visionExpenses?: number;
+  priorYearQualifiedMedicalExpenses?: number;
+  plannedMedicalProcedures?: number;
+  otherQualifiedExpenses?: number;
+  dentalOrthodonticExpenses?: number;
+  monthlyContributionBudget?: number;
+}
+
+export interface FSAResults {
+  cappedHealthElection: number;
+  expectedUtilization: number;
+  carryoverProtected: number;
+  forfeitureRisk: number;
+  taxSavings: number;
+  netBenefit: number;
+  dependentCareTaxSavings: number;
+  dependentCareForfeitureRisk: number;
+  marginalRate: number;
+  perPaycheckDeduction?: number;
+  numberOfPaychecks?: number;
+  lpfsaTaxSavings?: number;
+  lpfsaForfeitureRisk?: number;
+  lpfsaNetBenefit?: number;
+}
+
+export interface CommuterInputs {
+  transitCost: number;
+  parkingCost: number;
+  annualIncome: number;
+  filingStatus: FilingStatus;
+  taxBracket?: number;
+}
+
+export interface CommuterResults {
+  transitSavings: number;
+  parkingSavings: number;
+  totalSavings: number;
+  annualTransit: number;
+  annualParking: number;
+  annualTotal: number;
+  marginalRate: number;
+}
+
+export interface LifeInsuranceInputs {
+  totalDebt: number;
+  income: number;
+  mortgageBalance: number;
+  educationCosts: number;
+  incomeYears: number;
+  currentInsurance: number;
+  currentAssets: number;
+  childrenUnder18: number;
+  monthlyLivingExpenses: number;
+}
+
+export interface LifeInsuranceResults {
+  dimeTotal: number;
+  additionalNeeded: number;
+  incomeReplacement: number;
+  adjustedNeed?: number;
+  livingExpensesComponent?: number;
+  childEducationMultiplier?: number;
+}

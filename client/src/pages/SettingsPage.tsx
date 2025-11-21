@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { 
-  User, 
-  Shield, 
-  Bell, 
-  Moon, 
+import {
+  User,
+  Shield,
+  Bell,
+  Moon,
   Globe,
   UserPlus,
   LogOut
@@ -35,7 +35,7 @@ export default function SettingsPage() {
                 <User className="h-5 w-5" />
                 <h2 className="font-display font-bold text-xl">Profile</h2>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
@@ -101,7 +101,7 @@ export default function SettingsPage() {
                 <Shield className="h-5 w-5" />
                 <h2 className="font-display font-bold text-xl">Security</h2>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -129,7 +129,7 @@ export default function SettingsPage() {
                 <Bell className="h-5 w-5" />
                 <h2 className="font-display font-bold text-xl">Notifications</h2>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -181,7 +181,7 @@ export default function SettingsPage() {
                 <Moon className="h-5 w-5" />
                 <h2 className="font-display font-bold text-xl">Appearance</h2>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -203,18 +203,57 @@ export default function SettingsPage() {
                 <Globe className="h-5 w-5" />
                 <h2 className="font-display font-bold text-xl">Language & Region</h2>
               </div>
-              
+
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="language">Language</Label>
                   <Input id="language" defaultValue="English (US)" data-testid="input-language" />
                 </div>
-                
+
                 <div>
                   <Label htmlFor="timezone">Timezone</Label>
                   <Input id="timezone" defaultValue="Eastern Time (ET)" data-testid="input-timezone" />
                 </div>
               </div>
+            </div>
+          </Card>
+
+          {/* Emergency Contacts */}
+          <Card>
+            <div className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  />
+                </svg>
+                <h2 className="font-display font-bold text-xl">Emergency Contacts</h2>
+              </div>
+
+              <div className="space-y-3 mb-4">
+                <div className="flex items-center justify-between p-3 rounded-md bg-accent/50">
+                  <div>
+                    <p className="font-medium">Jane Doe</p>
+                    <p className="text-sm text-muted-foreground">(555) 987-6543</p>
+                  </div>
+                  <Button size="sm" variant="ghost" data-testid="button-edit-contact-1">
+                    Edit
+                  </Button>
+                </div>
+              </div>
+
+              <Button variant="outline" data-testid="button-add-contact-settings">
+                <UserPlus className="mr-2 h-4 w-4" />
+                Add Emergency Contact
+              </Button>
             </div>
           </Card>
 
@@ -225,7 +264,7 @@ export default function SettingsPage() {
                 <UserPlus className="h-5 w-5" />
                 <h2 className="font-display font-bold text-xl">Dependents</h2>
               </div>
-              
+
               <div className="space-y-3 mb-4">
                 <div className="flex items-center justify-between p-3 rounded-md bg-accent/50">
                   <div>
@@ -259,8 +298,8 @@ export default function SettingsPage() {
           <Card>
             <div className="p-6">
               <div className="space-y-4">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full justify-start text-destructive hover:bg-destructive/10"
                   data-testid="button-logout"
                 >

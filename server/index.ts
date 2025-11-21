@@ -17,6 +17,14 @@ if (missingEnvVars.length > 0) {
 
 const app = express();
 
+declare global {
+  namespace Express {
+    interface Request {
+      memberId?: string;
+    }
+  }
+}
+
 declare module 'http' {
   interface IncomingMessage {
     rawBody: unknown
@@ -83,10 +91,33 @@ app.use((req, res, next) => {
   // Other ports are firewalled. Default to 5000 if not specified.
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5001', 10);
+  const initialPort = parseInt(process.env.PORT || '5001', 10);
   const host = process.platform === 'darwin' ? 'localhost' : '0.0.0.0';
 
-  server.listen(port, host, () => {
-    log(`serving on ${host}:${port}`);
-  });
+  const startServer = (port: number) => {
+    const serverInstance = server.listen(port, host, () => {
+      log(`serving on ${host}:${port}`);
+    });
+
+    serverInstance.on('error', (e: any) => {
+      if (e.code === 'EADDRINUSE') {
+        log(`Port ${port} is in use, trying ${port + 1}...`);
+        // server.listen returns a net.Server which we can't easily "close" if it failed to bind,
+        // but the error event implies it failed. We just try again.
+        // However, we need to be careful not to stack listeners if we were reusing the same object,
+        // but here 'server' is the HTTP server created by createServer(app).
+        // Calling listen again on the same server instance after an error *might* work or throw.
+        // A safer approach for the same instance is tricky.
+        // Actually, createServer returns a server that can be listened on multiple times if closed,
+        // but here it failed to start.
+        // Let's try closing it just in case, then retrying after a small delay.
+        server.close();
+        setTimeout(() => startServer(port + 1), 1000);
+      } else {
+        console.error(e);
+      }
+    });
+  };
+
+  startServer(initialPort);
 })();

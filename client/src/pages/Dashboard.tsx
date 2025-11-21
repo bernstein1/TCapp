@@ -6,6 +6,7 @@ import { CaseCard, type Case } from "@/components/CaseCard";
 import { NotificationItem, type Notification } from "@/components/NotificationItem";
 import { AppointmentCard, type Appointment } from "@/components/AppointmentCard";
 import { NewCaseModal } from "@/components/NewCaseModal";
+import { AdvocateProfileModal, type Advocate } from "@/components/AdvocateProfileModal";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -14,6 +15,7 @@ import {
   FileText,
   ChevronRight
 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // Check if user prefers reduced motion
 const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -127,6 +129,41 @@ export default function Dashboard() {
     consultantName: "Dr. Emily Martinez",
     format: "video",
   };
+
+  const mockAdvocates: Advocate[] = [
+    {
+      name: "Dr. Emily Martinez",
+      title: "Primary Care Physician",
+      initials: "EM",
+      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=100&h=100",
+      bio: "Dr. Martinez has over 15 years of experience in family medicine and preventive care. She focuses on holistic health and patient education.",
+      location: "New York, NY",
+      languages: ["English", "Spanish"],
+      specialties: ["Family Medicine", "Preventive Care", "Women's Health"]
+    },
+    {
+      name: "Sarah Johnson",
+      title: "Case Manager",
+      initials: "SJ",
+      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100",
+      bio: "Sarah specializes in navigating complex insurance claims and coordinating care plans. She is dedicated to ensuring members get the most out of their benefits.",
+      location: "Remote (EST)",
+      languages: ["English"],
+      specialties: ["Claims Advocacy", "Care Coordination", "Billing Support"]
+    },
+    {
+      name: "Michael Chen",
+      title: "Benefits Specialist",
+      initials: "MC",
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100&h=100",
+      bio: "Michael helps members understand their coverage options and maximize their HSA/FSA benefits. He has a background in financial planning.",
+      location: "San Francisco, CA",
+      languages: ["English", "Mandarin"],
+      specialties: ["Benefits Optimization", "Financial Planning", "Enrollment Support"]
+    }
+  ];
+
+  const [selectedAdvocate, setSelectedAdvocate] = useState<Advocate | null>(null);
 
   return (
     <div className="min-h-screen p-4 lg:p-8">
@@ -307,6 +344,8 @@ export default function Dashboard() {
               </Card>
             </motion.div>
 
+
+
             {/* Upcoming Appointment */}
             <motion.div variants={itemVariants}>
               <h2 className="font-display font-bold text-xl mb-4">Upcoming Appointment</h2>
@@ -321,11 +360,47 @@ export default function Dashboard() {
                 }}
               />
             </motion.div>
+
+            {/* Healthcare Advocates */}
+            <motion.div variants={itemVariants}>
+              <h2 className="font-display font-bold text-xl mb-4">Your Healthcare Advocates</h2>
+              <Card className="p-4">
+                <div className="space-y-4">
+                  {mockAdvocates.map((advocate, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-3 cursor-pointer hover:bg-accent/50 p-2 rounded-lg transition-colors -mx-2"
+                      onClick={() => setSelectedAdvocate(advocate)}
+                    >
+                      <Avatar className="h-10 w-10 border border-border">
+                        <AvatarImage src={advocate.image} alt={advocate.name} />
+                        <AvatarFallback>{advocate.initials}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-medium text-sm leading-none">{advocate.name}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{advocate.title}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </motion.div>
           </motion.div>
         </div>
       </div>
 
       <NewCaseModal open={showNewCaseModal} onClose={() => setShowNewCaseModal(false)} />
+
+      <AdvocateProfileModal
+        advocate={selectedAdvocate}
+        open={!!selectedAdvocate}
+        onClose={() => setSelectedAdvocate(null)}
+        onMessage={() => {
+          setSelectedAdvocate(null);
+          setShowNewCaseModal(true);
+        }}
+      />
     </div>
   );
 }
+

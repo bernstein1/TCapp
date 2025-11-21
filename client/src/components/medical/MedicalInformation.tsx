@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MedicationList, type Medication } from "./MedicationList";
 import { SimpleList } from "./SimpleList";
 import { MedicalOverviewCards } from "./MedicalOverviewCards";
+import { MedicalProviders } from "./MedicalProviders";
 import { medicalApi } from "@/services/medicalApi";
 import { Shield, AlertTriangle, Heart, Activity } from "lucide-react";
 
@@ -167,6 +168,11 @@ export function MedicalInformation() {
                     </div>
                 </div>
             )}
+
+            {/* Medical Providers - Always Visible */}
+            <div className="mt-6">
+                <MedicalProviders />
+            </div>
         </div>
     );
 }

@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Clock, ExternalLink, BookOpen, Megaphone, Bot, FileText, CheckCircle2 } from "lucide-react";
 import { format } from "date-fns";
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { AIAssistantModal } from "@/components/AIAssistantModal";
 
 
@@ -48,6 +49,7 @@ type Guide = {
 
 export default function ResourcesPage() {
   const [showAIAgent, setShowAIAgent] = useState(false);
+  const [, setLocation] = useLocation();
   // Mock data
   const announcements: Announcement[] = [
     {
@@ -76,39 +78,30 @@ export default function ResourcesPage() {
   const articles: Article[] = [
     {
       id: "1",
-      title: "Understanding Your Explanation of Benefits (EOB)",
-      excerpt: "Learn how to read and understand your EOB statements, including what each section means and how to identify potential billing errors.",
-      author: "Dr. Sarah Johnson",
-      date: new Date(2024, 10, 10),
-      category: "Claims & Coverage",
-      readTime: "5 min read",
+      title: "Same Pill, Different Price: How to Find the Best Deal on Your Medications",
+      excerpt: "Stop overpaying for prescriptions. Compare costs across pharmacies, explore mail-order options, and learn when discount programs beat your insurance price.",
+      author: "TouchCare Team",
+      date: new Date(2025, 10, 3),
+      category: "Prescription Savings",
+      readTime: "8 min read",
     },
     {
       id: "2",
-      title: "Preventive Care: Your Health Insurance's Best-Kept Secret",
-      excerpt: "Discover the preventive care services covered at no cost to you, including annual checkups, screenings, and vaccinations.",
-      author: "Emily Chen, RN",
-      date: new Date(2024, 10, 5),
-      category: "Wellness",
+      title: "The 5 Most Expensive Medicare Mistakes (and How to Avoid Them)",
+      excerpt: "Medicare mistakes can be expensive and permanent. Discover the 5 most common errors people make with enrollment, plan selection, and coverage decisions.",
+      author: "TouchCare Team",
+      date: new Date(2025, 9, 1),
+      category: "Medicare & Benefits",
       readTime: "7 min read",
     },
     {
       id: "3",
-      title: "Choosing the Right Specialist: A Member's Guide",
-      excerpt: "Navigate the process of finding and selecting the right specialist for your healthcare needs while staying in-network.",
-      author: "Michael Rodriguez, Benefits Advisor",
-      date: new Date(2024, 9, 28),
-      category: "Provider Network",
+      title: "Science-Backed Ways to Take the Edge Off Stress",
+      excerpt: "Discover science-backed stress relief techniques like breathwork, cold exposure, and movement—plus how TouchCare can guide you to covered wellness options.",
+      author: "TouchCare Team",
+      date: new Date(2025, 8, 2),
+      category: "Wellness",
       readTime: "6 min read",
-    },
-    {
-      id: "4",
-      title: "Mental Health Coverage: What You Need to Know",
-      excerpt: "Understanding your mental health benefits, including therapy coverage, counseling services, and support resources available to you.",
-      author: "Dr. Amanda Lee, PsyD",
-      date: new Date(2024, 9, 20),
-      category: "Mental Health",
-      readTime: "8 min read",
     },
   ];
 
@@ -146,7 +139,7 @@ export default function ResourcesPage() {
     {
       id: "1",
       title: "How to File a Claim",
-      description: "Step-by-step instructions for submitting medical, dental, and vision claims through the TouchCare portal.",
+      description: "Step-by-step instructions for submitting medical, dental, and vision claims. Upload your bill, and we'll coordinate with providers to ensure accuracy and handle any discrepancies.",
       category: "Claims",
       steps: 5,
       estimatedTime: "10 minutes",
@@ -154,7 +147,7 @@ export default function ResourcesPage() {
     {
       id: "2",
       title: "Finding In-Network Providers",
-      description: "Learn how to search and verify providers in your network to maximize coverage and minimize out-of-pocket costs.",
+      description: "We assess every provider based on location, cost, specialty type, and gender preference. Our Health Assistants carefully match you with in-network providers and can even schedule appointments for you.",
       category: "Provider Network",
       steps: 4,
       estimatedTime: "8 minutes",
@@ -162,32 +155,32 @@ export default function ResourcesPage() {
     {
       id: "3",
       title: "Understanding Your Benefits Summary",
-      description: "A comprehensive guide to reading and understanding your Summary of Benefits and Coverage (SBC) document.",
+      description: "Schedule a confidential deep-dive consultation to review your health plan, ask detailed questions, and understand your medical, dental, vision, FSA, HSA, and HRA benefits.",
       category: "Coverage",
       steps: 6,
       estimatedTime: "12 minutes",
     },
     {
       id: "4",
-      title: "Setting Up Direct Deposit for Reimbursements",
-      description: "Quick guide to configure direct deposit for faster claim reimbursements and FSA distributions.",
-      category: "Account Management",
+      title: "Getting Cost Transparency Before Procedures",
+      description: "Learn your precise costs before any test or procedure. We provide clear side-by-side comparisons to help you find high-quality, low-cost options and avoid overpaying.",
+      category: "Cost Savings",
       steps: 3,
       estimatedTime: "5 minutes",
     },
     {
       id: "5",
-      title: "Using Your FSA Card",
-      description: "Everything you need to know about using your Flexible Spending Account card for eligible expenses.",
-      category: "FSA",
+      title: "RxCare: Saving Money on Prescriptions",
+      description: "Understand your pharmaceutical benefits and discover the lowest-cost prescription options. We'll explore mail-order services, discount programs, and creative ways to save money.",
+      category: "Prescriptions",
       steps: 4,
       estimatedTime: "7 minutes",
     },
     {
       id: "6",
-      title: "Requesting Prior Authorization",
-      description: "Step-by-step process for obtaining prior authorization for procedures, medications, or specialist visits.",
-      category: "Coverage",
+      title: "Open Enrollment: Making the Right Choice",
+      description: "Get personalized support during open enrollment. We'll help you understand plan options, estimate costs, and select benefits that match your unique healthcare needs.",
+      category: "Benefits Selection",
       steps: 7,
       estimatedTime: "15 minutes",
     },
@@ -286,6 +279,7 @@ export default function ResourcesPage() {
                   key={guide.id}
                   className="hover-elevate cursor-pointer transition-all"
                   data-testid={`guide-${guide.id}`}
+                  onClick={() => setLocation(`/resources/guides/${guide.id}`)}
                 >
                   <div className="p-6">
                     <div className="flex items-start gap-4 mb-4">
@@ -313,7 +307,10 @@ export default function ResourcesPage() {
                         <CheckCircle2 className="h-4 w-4" />
                         <span>{guide.steps} steps</span>
                       </div>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => {
+                        e.stopPropagation();
+                        setLocation(`/resources/guides/${guide.id}`);
+                      }}>
                         View Guide
                         <ExternalLink className="ml-2 h-3 w-3" />
                       </Button>
@@ -332,6 +329,7 @@ export default function ResourcesPage() {
                   key={article.id}
                   className="overflow-hidden hover-elevate cursor-pointer transition-all"
                   data-testid={`article-${article.id}`}
+                  onClick={() => setLocation(`/resources/articles/${article.id}`)}
                 >
                   {/* Article image placeholder */}
                   <div className="h-48 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
@@ -360,7 +358,10 @@ export default function ResourcesPage() {
                         <p className="font-medium">{article.author}</p>
                         <p>{format(article.date, "MMM d, yyyy")}</p>
                       </div>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => {
+                        e.stopPropagation();
+                        setLocation(`/resources/articles/${article.id}`);
+                      }}>
                         Read More
                         <ExternalLink className="ml-2 h-3 w-3" />
                       </Button>

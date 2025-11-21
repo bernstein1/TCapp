@@ -128,3 +128,17 @@ export const conditions = [
 export const bloodTypes = [
     "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"
 ];
+
+export const providerTypes = [
+    "Primary Care Physician",
+    "Dentist",
+    "Specialist",
+    "Mental Health Provider",
+    "Optometrist",
+    "Ophthalmologist",
+    "Dermatologist",
+    "Cardiologist",
+    "Orthopedist",
+    "Physical Therapist",
+    "Other"
+];

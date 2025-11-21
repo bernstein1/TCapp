@@ -16,6 +16,8 @@ import WalletPage from "@/pages/WalletPage";
 import SchedulePage from "@/pages/SchedulePage";
 import ServicesPage from "@/pages/ServicesPage";
 import ResourcesPage from "@/pages/ResourcesPage";
+import ArticleDetailPage from "@/pages/ArticleDetailPage";
+import GuideDetailPage from "@/pages/GuideDetailPage";
 import SettingsPage from "@/pages/SettingsPage";
 import LoginPage from "@/pages/LoginPage";
 import VerificationCodePage from "@/pages/VerificationCodePage";
@@ -235,6 +237,36 @@ function Router() {
                 transition={pageTransition}
               >
                 <ResourcesPage />
+              </motion.div>
+            </MemberLayout>
+          )}
+        </Route>
+        <Route path="/resources/articles/:id">
+          {() => (
+            <MemberLayout>
+              <motion.div
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                variants={pageVariants}
+                transition={pageTransition}
+              >
+                <ArticleDetailPage />
+              </motion.div>
+            </MemberLayout>
+          )}
+        </Route>
+        <Route path="/resources/guides/:id">
+          {() => (
+            <MemberLayout>
+              <motion.div
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                variants={pageVariants}
+                transition={pageTransition}
+              >
+                <GuideDetailPage />
               </motion.div>
             </MemberLayout>
           )}
